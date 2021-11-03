@@ -4,8 +4,8 @@ option go_package = "/lider"; // specify the package directory
 package lider;
 
 message Interaction{
-    int32 player_id = 1; // player id
-    int32 play = 2; // content of the play
+    int64 player = 1; // player id
+    int64 play = 2; // content of the play
     string response = 3; // response to the play
 }
 

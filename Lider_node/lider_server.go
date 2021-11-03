@@ -23,10 +23,11 @@ func main(){
 	}
 
 	grpcServer := grpc.NewServer()
+	lider.RegisterPlayerServiceServer(grpcServer, &lider.Server{})
+	err = grpcServer.Serve(lis) // bind server
 
-	lider.RegisterInteractionServiceServer(grpcServer, &lider.Server{})
-	err = grpcServer.Serve(lis)
 	if err != nil {
 		log.Fatalf("Error: %v", err)
 	}
+
 }

@@ -58,6 +58,7 @@ func Jugar_F1() {
 		}
 	}
 
+	//Eliminar jugadores que no lograron el puntaje
 	for j := 0; j < 16; j++ {
 		if eliminados[j] == 0 {
 			if puntajes[j] < 21 {
@@ -74,19 +75,87 @@ func Jugar_F1() {
 }
 
 //Analizis del Lider sobre el segundo juego
-func Jugar_F2(player_number int64) int {
+func Jugar_F2(cant_jugadores int) {
 
-	s2 := rand.NewSource(time.Now().UnixNano() * player_number)
+	var sobrevivientes = make([]int, cant_jugadores) //ARREGLO TEMPORAL CON LOS EQUIPOS (1ra mitad: equipo 1/ 2da mitad equipo 2)
+	for i := 0; i < cant_jugadores; i++ {
+		sobrevivientes[i] += (i + 1)
+	}
+
+	//crear valor aleatorio del lider
+	s2 := rand.NewSource(time.Now().UnixNano() * 100)
 	r2 := rand.New(s2)
+	valor_lider := r2.Intn(4) + 1
 
-	return r2.Intn(4) + 1
+	//guardar numeros de cada particupante
+	var teams = make([]int, cant_jugadores)
+	for i := 0; i < cant_jugadores; i++ {
+		teams[i] += i //POR HACER sumar valor selecionado por cada jugador
+	}
+
+	var team1 int = 0
+	var team2 int = 0
+
+	//sacar suma de resultados de cada team
+	for i := 0; i < cant_jugadores; i++ {
+		if i < cant_jugadores/2 {
+			team1 += teams[i]
+		} else {
+			team2 += teams[i]
+		}
+	}
+
+	//ver cual es el equipo perdedor y eliminarlo
+	if valor_lider%2 != team1%2 && valor_lider%2 != team2%2 {
+		//Matar equipo random
+		s := rand.NewSource(time.Now().UnixNano() * 27)
+		r := rand.New(s)
+		perdedor := r.Intn(2)
+		if perdedor == 0 {
+			//Matar equipo 1
+			fmt.Println("MATADO EL EQUIPO 1")
+			for i := 0; i < cant_jugadores/2; i++ {
+				//fmt.Println(sobrevivientes[i])
+				kill_player(sobrevivientes[i])
+			}
+		} else {
+
+			fmt.Println("MATADO EL EQUIPO 2")
+			for i := cant_jugadores / 2; i < cant_jugadores; i++ {
+				//fmt.Println(sobrevivientes[i])
+				kill_player(sobrevivientes[i])
+			}
+		}
+
+	} else if valor_lider%2 != team1%2 && valor_lider%2 == team2%2 {
+		//Matar equipo 1
+		fmt.Println("MATADO EL EQUIPO 1")
+		for i := 0; i < cant_jugadores/2; i++ {
+			//fmt.Println(sobrevivientes[i])
+			kill_player(sobrevivientes[i])
+		}
+
+	} else if valor_lider%2 == team1%2 && valor_lider%2 != team2%2 {
+		//Matar equipo 2
+		fmt.Println("MATADO EL EQUIPO 2")
+		for i := cant_jugadores / 2; i < cant_jugadores; i++ {
+			//fmt.Println(sobrevivientes[i])
+			kill_player(sobrevivientes[i])
+		}
+	}
+
+	fmt.Println(valor_lider)
+	fmt.Println(team1)
+	fmt.Println(team2)
+
+	return
 
 }
 
-//Jugar tercera fase para un bot
-func Jugar_F3(player_number int64) int {
+//Analizis del Lider sobre el tercer juego
+func Jugar_F3() int {
 
-	s3 := rand.NewSource(time.Now().UnixNano() * player_number)
+	s3 := rand.NewSource(time.Now().UnixNano() * 100)
 	r3 := rand.New(s3)
 
 	return r3.Intn(10) + 1
@@ -95,6 +164,6 @@ func Jugar_F3(player_number int64) int {
 
 func main() {
 
-	Jugar_F1()
+	Jugar_F2(8)
 	return
 }

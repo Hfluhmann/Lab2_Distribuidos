@@ -22,8 +22,12 @@ func main(){
 		log.Fatalf("Error: %v", err)
 	}
 
+	var connections []*lider.Connection
+
+	//server := &lider.Server{connections}
+
 	grpcServer := grpc.NewServer()
-	lider.RegisterPlayerServiceServer(grpcServer, &lider.Server{})
+	lider.RegisterPlayerServiceServer(grpcServer, &lider.Server{connections})
 	err = grpcServer.Serve(lis) // bind server
 
 	if err != nil {

@@ -11,17 +11,21 @@ message Interaction{
 
 message PlayerRequest{
     int32 type = 1; // type of request. 0: connection, 1: send move
-    int32 play = 2; // content of the play
+    int32 player = 2; // player id
+    int32 play = 3; // content of the play
 }
 
 message PlayerResponse{
     int32 type = 1; // type of response. 0: init game round, 1: result of the move
-    int32 response = 2; // content of the play
+    int32 player = 2; // player id
+    int32 response = 3; // content of the play
 }
 
 service PlayerService{
-    rpc GetConnection(Interaction) returns (Interaction) {};
-    rpc SendPlay(Interaction) returns (Interaction) {};
-    rpc GetPrizePool(Interaction) returns (Interaction) {};
-    rpc SubscribePlayer(stream PlayerRequest) returns (stream PlayerResponse) {};
+    // rpc GetConnection(Interaction) returns (Interaction) {};
+    // rpc SendPlay(Interaction) returns (Interaction) {};
+    // rpc GetPrizePool(Interaction) returns (Interaction) {};
+    // rpc SubscribePlayer(stream PlayerRequest) returns (stream PlayerResponse) {};
+    // rpc CreateConnection(stream PlayerRequest) returns (stream PlayerResponse) {};
+    rpc PlayerHandler(stream PlayerRequest) returns (stream PlayerResponse) {};
 }

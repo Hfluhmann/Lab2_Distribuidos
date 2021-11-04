@@ -92,8 +92,9 @@ type PlayerRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Type int32 `protobuf:"varint,1,opt,name=type,proto3" json:"type,omitempty"` // type of request. 0: connection, 1: send move
-	Play int32 `protobuf:"varint,2,opt,name=play,proto3" json:"play,omitempty"` // content of the play
+	Type   int32 `protobuf:"varint,1,opt,name=type,proto3" json:"type,omitempty"`     // type of request. 0: connection, 1: send move
+	Player int32 `protobuf:"varint,2,opt,name=player,proto3" json:"player,omitempty"` // player id
+	Play   int32 `protobuf:"varint,3,opt,name=play,proto3" json:"play,omitempty"`     // content of the play
 }
 
 func (x *PlayerRequest) Reset() {
@@ -135,6 +136,13 @@ func (x *PlayerRequest) GetType() int32 {
 	return 0
 }
 
+func (x *PlayerRequest) GetPlayer() int32 {
+	if x != nil {
+		return x.Player
+	}
+	return 0
+}
+
 func (x *PlayerRequest) GetPlay() int32 {
 	if x != nil {
 		return x.Play
@@ -148,7 +156,8 @@ type PlayerResponse struct {
 	unknownFields protoimpl.UnknownFields
 
 	Type     int32 `protobuf:"varint,1,opt,name=type,proto3" json:"type,omitempty"`         // type of response. 0: init game round, 1: result of the move
-	Response int32 `protobuf:"varint,2,opt,name=response,proto3" json:"response,omitempty"` // content of the play
+	Player   int32 `protobuf:"varint,2,opt,name=player,proto3" json:"player,omitempty"`     // player id
+	Response int32 `protobuf:"varint,3,opt,name=response,proto3" json:"response,omitempty"` // content of the play
 }
 
 func (x *PlayerResponse) Reset() {
@@ -190,6 +199,13 @@ func (x *PlayerResponse) GetType() int32 {
 	return 0
 }
 
+func (x *PlayerResponse) GetPlayer() int32 {
+	if x != nil {
+		return x.Player
+	}
+	return 0
+}
+
 func (x *PlayerResponse) GetResponse() int32 {
 	if x != nil {
 		return x.Response
@@ -206,34 +222,26 @@ var file_lider_proto_rawDesc = []byte{
 	0x01, 0x28, 0x03, 0x52, 0x06, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x12, 0x12, 0x0a, 0x04, 0x70,
 	0x6c, 0x61, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x70, 0x6c, 0x61, 0x79, 0x12,
 	0x1a, 0x0a, 0x08, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x08, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x37, 0x0a, 0x0d, 0x50,
+	0x09, 0x52, 0x08, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x4f, 0x0a, 0x0d, 0x50,
 	0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x12, 0x0a, 0x04,
 	0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65,
-	0x12, 0x12, 0x0a, 0x04, 0x70, 0x6c, 0x61, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04,
-	0x70, 0x6c, 0x61, 0x79, 0x22, 0x40, 0x0a, 0x0e, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x72, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x08, 0x72, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0x80, 0x02, 0x0a, 0x0d, 0x50, 0x6c, 0x61, 0x79, 0x65,
-	0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x39, 0x0a, 0x0d, 0x47, 0x65, 0x74, 0x43,
-	0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x12, 0x2e, 0x6c, 0x69, 0x64, 0x65,
-	0x72, 0x2e, 0x49, 0x6e, 0x74, 0x65, 0x72, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x1a, 0x12, 0x2e,
-	0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x49, 0x6e, 0x74, 0x65, 0x72, 0x61, 0x63, 0x74, 0x69, 0x6f,
-	0x6e, 0x22, 0x00, 0x12, 0x34, 0x0a, 0x08, 0x53, 0x65, 0x6e, 0x64, 0x50, 0x6c, 0x61, 0x79, 0x12,
-	0x12, 0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x49, 0x6e, 0x74, 0x65, 0x72, 0x61, 0x63, 0x74,
-	0x69, 0x6f, 0x6e, 0x1a, 0x12, 0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x49, 0x6e, 0x74, 0x65,
-	0x72, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x00, 0x12, 0x38, 0x0a, 0x0c, 0x47, 0x65, 0x74,
-	0x50, 0x72, 0x69, 0x7a, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x12, 0x12, 0x2e, 0x6c, 0x69, 0x64, 0x65,
-	0x72, 0x2e, 0x49, 0x6e, 0x74, 0x65, 0x72, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x1a, 0x12, 0x2e,
-	0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x49, 0x6e, 0x74, 0x65, 0x72, 0x61, 0x63, 0x74, 0x69, 0x6f,
-	0x6e, 0x22, 0x00, 0x12, 0x44, 0x0a, 0x0f, 0x53, 0x75, 0x62, 0x73, 0x63, 0x72, 0x69, 0x62, 0x65,
-	0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x12, 0x14, 0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x50,
-	0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x6c,
-	0x69, 0x64, 0x65, 0x72, 0x2e, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x22, 0x00, 0x28, 0x01, 0x30, 0x01, 0x42, 0x24, 0x5a, 0x22, 0x4c, 0x61, 0x62,
-	0x32, 0x5f, 0x44, 0x69, 0x73, 0x74, 0x72, 0x69, 0x62, 0x75, 0x69, 0x64, 0x6f, 0x73, 0x2f, 0x73,
-	0x71, 0x75, 0x69, 0x64, 0x5f, 0x67, 0x61, 0x6d, 0x65, 0x2f, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x62,
-	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x12, 0x16, 0x0a, 0x06, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05,
+	0x52, 0x06, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x12, 0x12, 0x0a, 0x04, 0x70, 0x6c, 0x61, 0x79,
+	0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x70, 0x6c, 0x61, 0x79, 0x22, 0x58, 0x0a, 0x0e,
+	0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x12,
+	0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x74, 0x79,
+	0x70, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x05, 0x52, 0x06, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x12, 0x1a, 0x0a, 0x08, 0x72, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x08, 0x72, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0x53, 0x0a, 0x0d, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72,
+	0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x42, 0x0a, 0x0d, 0x50, 0x6c, 0x61, 0x79, 0x65,
+	0x72, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x72, 0x12, 0x14, 0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72,
+	0x2e, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15,
+	0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x28, 0x01, 0x30, 0x01, 0x42, 0x24, 0x5a, 0x22, 0x4c,
+	0x61, 0x62, 0x32, 0x5f, 0x44, 0x69, 0x73, 0x74, 0x72, 0x69, 0x62, 0x75, 0x69, 0x64, 0x6f, 0x73,
+	0x2f, 0x73, 0x71, 0x75, 0x69, 0x64, 0x5f, 0x67, 0x61, 0x6d, 0x65, 0x2f, 0x6c, 0x69, 0x64, 0x65,
+	0x72, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -255,16 +263,10 @@ var file_lider_proto_goTypes = []interface{}{
 	(*PlayerResponse)(nil), // 2: lider.PlayerResponse
 }
 var file_lider_proto_depIdxs = []int32{
-	0, // 0: lider.PlayerService.GetConnection:input_type -> lider.Interaction
-	0, // 1: lider.PlayerService.SendPlay:input_type -> lider.Interaction
-	0, // 2: lider.PlayerService.GetPrizePool:input_type -> lider.Interaction
-	1, // 3: lider.PlayerService.SubscribePlayer:input_type -> lider.PlayerRequest
-	0, // 4: lider.PlayerService.GetConnection:output_type -> lider.Interaction
-	0, // 5: lider.PlayerService.SendPlay:output_type -> lider.Interaction
-	0, // 6: lider.PlayerService.GetPrizePool:output_type -> lider.Interaction
-	2, // 7: lider.PlayerService.SubscribePlayer:output_type -> lider.PlayerResponse
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
+	1, // 0: lider.PlayerService.PlayerHandler:input_type -> lider.PlayerRequest
+	2, // 1: lider.PlayerService.PlayerHandler:output_type -> lider.PlayerResponse
+	1, // [1:2] is the sub-list for method output_type
+	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -345,10 +347,12 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type PlayerServiceClient interface {
-	GetConnection(ctx context.Context, in *Interaction, opts ...grpc.CallOption) (*Interaction, error)
-	SendPlay(ctx context.Context, in *Interaction, opts ...grpc.CallOption) (*Interaction, error)
-	GetPrizePool(ctx context.Context, in *Interaction, opts ...grpc.CallOption) (*Interaction, error)
-	SubscribePlayer(ctx context.Context, opts ...grpc.CallOption) (PlayerService_SubscribePlayerClient, error)
+	// rpc GetConnection(Interaction) returns (Interaction) {};
+	// rpc SendPlay(Interaction) returns (Interaction) {};
+	// rpc GetPrizePool(Interaction) returns (Interaction) {};
+	// rpc SubscribePlayer(stream PlayerRequest) returns (stream PlayerResponse) {};
+	// rpc CreateConnection(stream PlayerRequest) returns (stream PlayerResponse) {};
+	PlayerHandler(ctx context.Context, opts ...grpc.CallOption) (PlayerService_PlayerHandlerClient, error)
 }
 
 type playerServiceClient struct {
@@ -359,57 +363,30 @@ func NewPlayerServiceClient(cc grpc.ClientConnInterface) PlayerServiceClient {
 	return &playerServiceClient{cc}
 }
 
-func (c *playerServiceClient) GetConnection(ctx context.Context, in *Interaction, opts ...grpc.CallOption) (*Interaction, error) {
-	out := new(Interaction)
-	err := c.cc.Invoke(ctx, "/lider.PlayerService/GetConnection", in, out, opts...)
+func (c *playerServiceClient) PlayerHandler(ctx context.Context, opts ...grpc.CallOption) (PlayerService_PlayerHandlerClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_PlayerService_serviceDesc.Streams[0], "/lider.PlayerService/PlayerHandler", opts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
-}
-
-func (c *playerServiceClient) SendPlay(ctx context.Context, in *Interaction, opts ...grpc.CallOption) (*Interaction, error) {
-	out := new(Interaction)
-	err := c.cc.Invoke(ctx, "/lider.PlayerService/SendPlay", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *playerServiceClient) GetPrizePool(ctx context.Context, in *Interaction, opts ...grpc.CallOption) (*Interaction, error) {
-	out := new(Interaction)
-	err := c.cc.Invoke(ctx, "/lider.PlayerService/GetPrizePool", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *playerServiceClient) SubscribePlayer(ctx context.Context, opts ...grpc.CallOption) (PlayerService_SubscribePlayerClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_PlayerService_serviceDesc.Streams[0], "/lider.PlayerService/SubscribePlayer", opts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &playerServiceSubscribePlayerClient{stream}
+	x := &playerServicePlayerHandlerClient{stream}
 	return x, nil
 }
 
-type PlayerService_SubscribePlayerClient interface {
+type PlayerService_PlayerHandlerClient interface {
 	Send(*PlayerRequest) error
 	Recv() (*PlayerResponse, error)
 	grpc.ClientStream
 }
 
-type playerServiceSubscribePlayerClient struct {
+type playerServicePlayerHandlerClient struct {
 	grpc.ClientStream
 }
 
-func (x *playerServiceSubscribePlayerClient) Send(m *PlayerRequest) error {
+func (x *playerServicePlayerHandlerClient) Send(m *PlayerRequest) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *playerServiceSubscribePlayerClient) Recv() (*PlayerResponse, error) {
+func (x *playerServicePlayerHandlerClient) Recv() (*PlayerResponse, error) {
 	m := new(PlayerResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -419,106 +396,45 @@ func (x *playerServiceSubscribePlayerClient) Recv() (*PlayerResponse, error) {
 
 // PlayerServiceServer is the server API for PlayerService service.
 type PlayerServiceServer interface {
-	GetConnection(context.Context, *Interaction) (*Interaction, error)
-	SendPlay(context.Context, *Interaction) (*Interaction, error)
-	GetPrizePool(context.Context, *Interaction) (*Interaction, error)
-	SubscribePlayer(PlayerService_SubscribePlayerServer) error
+	// rpc GetConnection(Interaction) returns (Interaction) {};
+	// rpc SendPlay(Interaction) returns (Interaction) {};
+	// rpc GetPrizePool(Interaction) returns (Interaction) {};
+	// rpc SubscribePlayer(stream PlayerRequest) returns (stream PlayerResponse) {};
+	// rpc CreateConnection(stream PlayerRequest) returns (stream PlayerResponse) {};
+	PlayerHandler(PlayerService_PlayerHandlerServer) error
 }
 
 // UnimplementedPlayerServiceServer can be embedded to have forward compatible implementations.
 type UnimplementedPlayerServiceServer struct {
 }
 
-func (*UnimplementedPlayerServiceServer) GetConnection(context.Context, *Interaction) (*Interaction, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetConnection not implemented")
-}
-func (*UnimplementedPlayerServiceServer) SendPlay(context.Context, *Interaction) (*Interaction, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendPlay not implemented")
-}
-func (*UnimplementedPlayerServiceServer) GetPrizePool(context.Context, *Interaction) (*Interaction, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetPrizePool not implemented")
-}
-func (*UnimplementedPlayerServiceServer) SubscribePlayer(PlayerService_SubscribePlayerServer) error {
-	return status.Errorf(codes.Unimplemented, "method SubscribePlayer not implemented")
+func (*UnimplementedPlayerServiceServer) PlayerHandler(PlayerService_PlayerHandlerServer) error {
+	return status.Errorf(codes.Unimplemented, "method PlayerHandler not implemented")
 }
 
 func RegisterPlayerServiceServer(s *grpc.Server, srv PlayerServiceServer) {
 	s.RegisterService(&_PlayerService_serviceDesc, srv)
 }
 
-func _PlayerService_GetConnection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Interaction)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlayerServiceServer).GetConnection(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/lider.PlayerService/GetConnection",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlayerServiceServer).GetConnection(ctx, req.(*Interaction))
-	}
-	return interceptor(ctx, in, info, handler)
+func _PlayerService_PlayerHandler_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(PlayerServiceServer).PlayerHandler(&playerServicePlayerHandlerServer{stream})
 }
 
-func _PlayerService_SendPlay_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Interaction)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlayerServiceServer).SendPlay(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/lider.PlayerService/SendPlay",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlayerServiceServer).SendPlay(ctx, req.(*Interaction))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PlayerService_GetPrizePool_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Interaction)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlayerServiceServer).GetPrizePool(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/lider.PlayerService/GetPrizePool",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlayerServiceServer).GetPrizePool(ctx, req.(*Interaction))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _PlayerService_SubscribePlayer_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(PlayerServiceServer).SubscribePlayer(&playerServiceSubscribePlayerServer{stream})
-}
-
-type PlayerService_SubscribePlayerServer interface {
+type PlayerService_PlayerHandlerServer interface {
 	Send(*PlayerResponse) error
 	Recv() (*PlayerRequest, error)
 	grpc.ServerStream
 }
 
-type playerServiceSubscribePlayerServer struct {
+type playerServicePlayerHandlerServer struct {
 	grpc.ServerStream
 }
 
-func (x *playerServiceSubscribePlayerServer) Send(m *PlayerResponse) error {
+func (x *playerServicePlayerHandlerServer) Send(m *PlayerResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *playerServiceSubscribePlayerServer) Recv() (*PlayerRequest, error) {
+func (x *playerServicePlayerHandlerServer) Recv() (*PlayerRequest, error) {
 	m := new(PlayerRequest)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -529,24 +445,11 @@ func (x *playerServiceSubscribePlayerServer) Recv() (*PlayerRequest, error) {
 var _PlayerService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "lider.PlayerService",
 	HandlerType: (*PlayerServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "GetConnection",
-			Handler:    _PlayerService_GetConnection_Handler,
-		},
-		{
-			MethodName: "SendPlay",
-			Handler:    _PlayerService_SendPlay_Handler,
-		},
-		{
-			MethodName: "GetPrizePool",
-			Handler:    _PlayerService_GetPrizePool_Handler,
-		},
-	},
+	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "SubscribePlayer",
-			Handler:       _PlayerService_SubscribePlayer_Handler,
+			StreamName:    "PlayerHandler",
+			Handler:       _PlayerService_PlayerHandler_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},

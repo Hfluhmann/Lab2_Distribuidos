@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
 	"time"
 )
 
@@ -14,12 +15,14 @@ func Abs(x int) int {
 }
 
 func kill_player(player_number int) {
+	fmt.Println("ha MUERTO el jugador " + strconv.Itoa(player_number))
 	//POR HACER le dice al jugador numero player_number que se murio y se debe desconectar
 	//POR HACER le dice al pozo que el jugador numero player_number murio y que actualice el pozo y el txt
 	return
 }
 
 func winner_player(player_number int) {
+	fmt.Println("ha ganado el jugador " + strconv.Itoa(player_number))
 	//POR HACER le dice al jugador numero player_number que gano el juego
 	//POR HACER le dice al pozo que el jugador numero player_number gano
 	//POR HACER no se que mas hace
@@ -57,7 +60,6 @@ func Jugar_F1() {
 		// El lider selecciona un valor entre 6 y 10
 		valor_lider := r1.Intn(5) + 6
 
-		fmt.Println(valor_lider)
 		for j := 0; j < 16; j++ {
 			if eliminados[j] == 0 {
 				//POR HACER recibir numero de cada jugador
@@ -82,8 +84,6 @@ func Jugar_F1() {
 		}
 	}
 
-	fmt.Println(puntajes)
-	fmt.Println(eliminados)
 	return
 
 }
@@ -129,14 +129,12 @@ func Jugar_F2(cant_jugadores int) {
 			//Matar equipo 1
 			fmt.Println("MATADO EL EQUIPO 1")
 			for i := 0; i < cant_jugadores/2; i++ {
-				//fmt.Println(sobrevivientes[i])
 				kill_player(sobrevivientes[i])
 			}
 		} else {
 
 			fmt.Println("MATADO EL EQUIPO 2")
 			for i := cant_jugadores / 2; i < cant_jugadores; i++ {
-				//fmt.Println(sobrevivientes[i])
 				kill_player(sobrevivientes[i])
 			}
 		}
@@ -145,7 +143,6 @@ func Jugar_F2(cant_jugadores int) {
 		//Matar equipo 1
 		fmt.Println("MATADO EL EQUIPO 1")
 		for i := 0; i < cant_jugadores/2; i++ {
-			//fmt.Println(sobrevivientes[i])
 			kill_player(sobrevivientes[i])
 		}
 
@@ -153,14 +150,9 @@ func Jugar_F2(cant_jugadores int) {
 		//Matar equipo 2
 		fmt.Println("MATADO EL EQUIPO 2")
 		for i := cant_jugadores / 2; i < cant_jugadores; i++ {
-			//fmt.Println(sobrevivientes[i])
 			kill_player(sobrevivientes[i])
 		}
 	}
-
-	fmt.Println(valor_lider)
-	fmt.Println(team1)
-	fmt.Println(team2)
 
 	return
 
@@ -196,13 +188,11 @@ func Jugar_F3(cant_jugadores int) {
 			winner_player(sobrevivientes[2*i])
 			winner_player(sobrevivientes[(2*i)+1])
 		} else if teams[2*i] < teams[(2*i)+1] {
-			fmt.Println(sobrevivientes[2*i])
 			// gana participante 1
 			// muere participante 2
 			kill_player(sobrevivientes[(2*i)+1])
 			winner_player(sobrevivientes[2*i])
 		} else {
-			fmt.Println(sobrevivientes[(2*i)+1])
 			// gana participante 2
 			// muere participante 1
 			kill_player(sobrevivientes[2*i])
@@ -216,7 +206,8 @@ func Jugar_F3(cant_jugadores int) {
 }
 
 func main() {
-
-	Jugar_F3(8)
+	Jugar_F1()
+	Jugar_F2(12)
+	Jugar_F3(6)
 	return
 }

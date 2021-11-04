@@ -5,8 +5,8 @@ import (
 	"log"
 	"net"
 
-	"Lab2_Distribuidos/Lider_node/lider"
 	"google.golang.org/grpc"
+	"Lab2_Distribuidos/squid_game/lider"
 )
 
 // func check_error(place string, err * Error){

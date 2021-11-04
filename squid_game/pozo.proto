@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "Lab2_Distribuidos/squid_game/pozo"; // specify the package directory
+package pozo;
+
+message PozoMessage{
+    int64 player = 1; // player id
+    int64 round = 2; // round number where the player died
+    string response = 3; // response
+}
+
+service PozoService{
+    rpc GetPrizePool(PozoMessage) returns (PozoMessage) {};
+    rpc IncreasePrizePool(PozoMessage) returns (PozoMessage) {};
+}

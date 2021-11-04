@@ -30,8 +30,8 @@ type Interaction struct {
 	unknownFields protoimpl.UnknownFields
 
 	Player   int64  `protobuf:"varint,1,opt,name=player,proto3" json:"player,omitempty"`    // player id
-	Play     int64  `protobuf:"varint,2,opt,name=play,proto3" json:"play,omitempty"`        // content of the play
-	Response string `protobuf:"bytes,3,opt,name=response,proto3" json:"response,omitempty"` // response to the play
+	Play     int64  `protobuf:"varint,2,opt,name=play,proto3" json:"play,omitempty"`        // content of the move
+	Response string `protobuf:"bytes,3,opt,name=response,proto3" json:"response,omitempty"` // response to the move
 }
 
 func (x *Interaction) Reset() {
@@ -87,6 +87,116 @@ func (x *Interaction) GetResponse() string {
 	return ""
 }
 
+type PlayerRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Type int32 `protobuf:"varint,1,opt,name=type,proto3" json:"type,omitempty"` // type of request. 0: connection, 1: send move
+	Play int32 `protobuf:"varint,2,opt,name=play,proto3" json:"play,omitempty"` // content of the play
+}
+
+func (x *PlayerRequest) Reset() {
+	*x = PlayerRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_lider_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PlayerRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PlayerRequest) ProtoMessage() {}
+
+func (x *PlayerRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_lider_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PlayerRequest.ProtoReflect.Descriptor instead.
+func (*PlayerRequest) Descriptor() ([]byte, []int) {
+	return file_lider_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *PlayerRequest) GetType() int32 {
+	if x != nil {
+		return x.Type
+	}
+	return 0
+}
+
+func (x *PlayerRequest) GetPlay() int32 {
+	if x != nil {
+		return x.Play
+	}
+	return 0
+}
+
+type PlayerResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Type     int32 `protobuf:"varint,1,opt,name=type,proto3" json:"type,omitempty"`         // type of response. 0: init game round, 1: result of the move
+	Response int32 `protobuf:"varint,2,opt,name=response,proto3" json:"response,omitempty"` // content of the play
+}
+
+func (x *PlayerResponse) Reset() {
+	*x = PlayerResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_lider_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PlayerResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PlayerResponse) ProtoMessage() {}
+
+func (x *PlayerResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_lider_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PlayerResponse.ProtoReflect.Descriptor instead.
+func (*PlayerResponse) Descriptor() ([]byte, []int) {
+	return file_lider_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *PlayerResponse) GetType() int32 {
+	if x != nil {
+		return x.Type
+	}
+	return 0
+}
+
+func (x *PlayerResponse) GetResponse() int32 {
+	if x != nil {
+		return x.Response
+	}
+	return 0
+}
+
 var File_lider_proto protoreflect.FileDescriptor
 
 var file_lider_proto_rawDesc = []byte{
@@ -96,20 +206,34 @@ var file_lider_proto_rawDesc = []byte{
 	0x01, 0x28, 0x03, 0x52, 0x06, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x12, 0x12, 0x0a, 0x04, 0x70,
 	0x6c, 0x61, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x70, 0x6c, 0x61, 0x79, 0x12,
 	0x1a, 0x0a, 0x08, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x08, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0xba, 0x01, 0x0a, 0x0d,
-	0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x39, 0x0a,
-	0x0d, 0x47, 0x65, 0x74, 0x43, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x12,
-	0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x49, 0x6e, 0x74, 0x65, 0x72, 0x61, 0x63, 0x74, 0x69,
-	0x6f, 0x6e, 0x1a, 0x12, 0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x49, 0x6e, 0x74, 0x65, 0x72,
-	0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x00, 0x12, 0x34, 0x0a, 0x08, 0x53, 0x65, 0x6e, 0x64,
-	0x50, 0x6c, 0x61, 0x79, 0x12, 0x12, 0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x49, 0x6e, 0x74,
-	0x65, 0x72, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x1a, 0x12, 0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72,
-	0x2e, 0x49, 0x6e, 0x74, 0x65, 0x72, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x00, 0x12, 0x38,
-	0x0a, 0x0c, 0x47, 0x65, 0x74, 0x50, 0x72, 0x69, 0x7a, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x12, 0x12,
-	0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x49, 0x6e, 0x74, 0x65, 0x72, 0x61, 0x63, 0x74, 0x69,
-	0x6f, 0x6e, 0x1a, 0x12, 0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x49, 0x6e, 0x74, 0x65, 0x72,
-	0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x00, 0x42, 0x08, 0x5a, 0x06, 0x2f, 0x6c, 0x69, 0x64,
-	0x65, 0x72, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x09, 0x52, 0x08, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x37, 0x0a, 0x0d, 0x50,
+	0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x12, 0x0a, 0x04,
+	0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65,
+	0x12, 0x12, 0x0a, 0x04, 0x70, 0x6c, 0x61, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04,
+	0x70, 0x6c, 0x61, 0x79, 0x22, 0x40, 0x0a, 0x0e, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x72, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x08, 0x72, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0x80, 0x02, 0x0a, 0x0d, 0x50, 0x6c, 0x61, 0x79, 0x65,
+	0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x39, 0x0a, 0x0d, 0x47, 0x65, 0x74, 0x43,
+	0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x12, 0x2e, 0x6c, 0x69, 0x64, 0x65,
+	0x72, 0x2e, 0x49, 0x6e, 0x74, 0x65, 0x72, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x1a, 0x12, 0x2e,
+	0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x49, 0x6e, 0x74, 0x65, 0x72, 0x61, 0x63, 0x74, 0x69, 0x6f,
+	0x6e, 0x22, 0x00, 0x12, 0x34, 0x0a, 0x08, 0x53, 0x65, 0x6e, 0x64, 0x50, 0x6c, 0x61, 0x79, 0x12,
+	0x12, 0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x49, 0x6e, 0x74, 0x65, 0x72, 0x61, 0x63, 0x74,
+	0x69, 0x6f, 0x6e, 0x1a, 0x12, 0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x49, 0x6e, 0x74, 0x65,
+	0x72, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x00, 0x12, 0x38, 0x0a, 0x0c, 0x47, 0x65, 0x74,
+	0x50, 0x72, 0x69, 0x7a, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x12, 0x12, 0x2e, 0x6c, 0x69, 0x64, 0x65,
+	0x72, 0x2e, 0x49, 0x6e, 0x74, 0x65, 0x72, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x1a, 0x12, 0x2e,
+	0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x49, 0x6e, 0x74, 0x65, 0x72, 0x61, 0x63, 0x74, 0x69, 0x6f,
+	0x6e, 0x22, 0x00, 0x12, 0x44, 0x0a, 0x0f, 0x53, 0x75, 0x62, 0x73, 0x63, 0x72, 0x69, 0x62, 0x65,
+	0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x12, 0x14, 0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x50,
+	0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x6c,
+	0x69, 0x64, 0x65, 0x72, 0x2e, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x22, 0x00, 0x28, 0x01, 0x30, 0x01, 0x42, 0x24, 0x5a, 0x22, 0x4c, 0x61, 0x62,
+	0x32, 0x5f, 0x44, 0x69, 0x73, 0x74, 0x72, 0x69, 0x62, 0x75, 0x69, 0x64, 0x6f, 0x73, 0x2f, 0x73,
+	0x71, 0x75, 0x69, 0x64, 0x5f, 0x67, 0x61, 0x6d, 0x65, 0x2f, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -124,19 +248,23 @@ func file_lider_proto_rawDescGZIP() []byte {
 	return file_lider_proto_rawDescData
 }
 
-var file_lider_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_lider_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_lider_proto_goTypes = []interface{}{
-	(*Interaction)(nil), // 0: lider.Interaction
+	(*Interaction)(nil),    // 0: lider.Interaction
+	(*PlayerRequest)(nil),  // 1: lider.PlayerRequest
+	(*PlayerResponse)(nil), // 2: lider.PlayerResponse
 }
 var file_lider_proto_depIdxs = []int32{
 	0, // 0: lider.PlayerService.GetConnection:input_type -> lider.Interaction
 	0, // 1: lider.PlayerService.SendPlay:input_type -> lider.Interaction
 	0, // 2: lider.PlayerService.GetPrizePool:input_type -> lider.Interaction
-	0, // 3: lider.PlayerService.GetConnection:output_type -> lider.Interaction
-	0, // 4: lider.PlayerService.SendPlay:output_type -> lider.Interaction
-	0, // 5: lider.PlayerService.GetPrizePool:output_type -> lider.Interaction
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
+	1, // 3: lider.PlayerService.SubscribePlayer:input_type -> lider.PlayerRequest
+	0, // 4: lider.PlayerService.GetConnection:output_type -> lider.Interaction
+	0, // 5: lider.PlayerService.SendPlay:output_type -> lider.Interaction
+	0, // 6: lider.PlayerService.GetPrizePool:output_type -> lider.Interaction
+	2, // 7: lider.PlayerService.SubscribePlayer:output_type -> lider.PlayerResponse
+	4, // [4:8] is the sub-list for method output_type
+	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -160,6 +288,30 @@ func file_lider_proto_init() {
 				return nil
 			}
 		}
+		file_lider_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PlayerRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_lider_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PlayerResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -167,7 +319,7 @@ func file_lider_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_lider_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -196,6 +348,7 @@ type PlayerServiceClient interface {
 	GetConnection(ctx context.Context, in *Interaction, opts ...grpc.CallOption) (*Interaction, error)
 	SendPlay(ctx context.Context, in *Interaction, opts ...grpc.CallOption) (*Interaction, error)
 	GetPrizePool(ctx context.Context, in *Interaction, opts ...grpc.CallOption) (*Interaction, error)
+	SubscribePlayer(ctx context.Context, opts ...grpc.CallOption) (PlayerService_SubscribePlayerClient, error)
 }
 
 type playerServiceClient struct {
@@ -233,11 +386,43 @@ func (c *playerServiceClient) GetPrizePool(ctx context.Context, in *Interaction,
 	return out, nil
 }
 
+func (c *playerServiceClient) SubscribePlayer(ctx context.Context, opts ...grpc.CallOption) (PlayerService_SubscribePlayerClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_PlayerService_serviceDesc.Streams[0], "/lider.PlayerService/SubscribePlayer", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &playerServiceSubscribePlayerClient{stream}
+	return x, nil
+}
+
+type PlayerService_SubscribePlayerClient interface {
+	Send(*PlayerRequest) error
+	Recv() (*PlayerResponse, error)
+	grpc.ClientStream
+}
+
+type playerServiceSubscribePlayerClient struct {
+	grpc.ClientStream
+}
+
+func (x *playerServiceSubscribePlayerClient) Send(m *PlayerRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *playerServiceSubscribePlayerClient) Recv() (*PlayerResponse, error) {
+	m := new(PlayerResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // PlayerServiceServer is the server API for PlayerService service.
 type PlayerServiceServer interface {
 	GetConnection(context.Context, *Interaction) (*Interaction, error)
 	SendPlay(context.Context, *Interaction) (*Interaction, error)
 	GetPrizePool(context.Context, *Interaction) (*Interaction, error)
+	SubscribePlayer(PlayerService_SubscribePlayerServer) error
 }
 
 // UnimplementedPlayerServiceServer can be embedded to have forward compatible implementations.
@@ -252,6 +437,9 @@ func (*UnimplementedPlayerServiceServer) SendPlay(context.Context, *Interaction)
 }
 func (*UnimplementedPlayerServiceServer) GetPrizePool(context.Context, *Interaction) (*Interaction, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPrizePool not implemented")
+}
+func (*UnimplementedPlayerServiceServer) SubscribePlayer(PlayerService_SubscribePlayerServer) error {
+	return status.Errorf(codes.Unimplemented, "method SubscribePlayer not implemented")
 }
 
 func RegisterPlayerServiceServer(s *grpc.Server, srv PlayerServiceServer) {
@@ -312,6 +500,32 @@ func _PlayerService_GetPrizePool_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PlayerService_SubscribePlayer_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(PlayerServiceServer).SubscribePlayer(&playerServiceSubscribePlayerServer{stream})
+}
+
+type PlayerService_SubscribePlayerServer interface {
+	Send(*PlayerResponse) error
+	Recv() (*PlayerRequest, error)
+	grpc.ServerStream
+}
+
+type playerServiceSubscribePlayerServer struct {
+	grpc.ServerStream
+}
+
+func (x *playerServiceSubscribePlayerServer) Send(m *PlayerResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *playerServiceSubscribePlayerServer) Recv() (*PlayerRequest, error) {
+	m := new(PlayerRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 var _PlayerService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "lider.PlayerService",
 	HandlerType: (*PlayerServiceServer)(nil),
@@ -329,6 +543,13 @@ var _PlayerService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _PlayerService_GetPrizePool_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "SubscribePlayer",
+			Handler:       _PlayerService_SubscribePlayer_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "lider.proto",
 }

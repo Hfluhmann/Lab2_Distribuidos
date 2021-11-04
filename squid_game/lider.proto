@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option go_package = "Lab2_Distribuidos/squid_game/lider"; // specify the package directory
+package lider;
+
+message Interaction{
+    int64 player = 1; // player id
+    int64 play = 2; // content of the move
+    string response = 3; // response to the move
+}
+
+message PlayerRequest{
+    int32 type = 1; // type of request. 0: connection, 1: send move
+    int32 play = 2; // content of the play
+}
+
+message PlayerResponse{
+    int32 type = 1; // type of response. 0: init game round, 1: result of the move
+    int32 response = 2; // content of the play
+}
+
+service PlayerService{
+    rpc GetConnection(Interaction) returns (Interaction) {};
+    rpc SendPlay(Interaction) returns (Interaction) {};
+    rpc GetPrizePool(Interaction) returns (Interaction) {};
+    rpc SubscribePlayer(stream PlayerRequest) returns (stream PlayerResponse) {};
+}

@@ -6,9 +6,23 @@ import (
 	"time"
 )
 
+func Abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
+
 func kill_player(player_number int) {
 	//POR HACER le dice al jugador numero player_number que se murio y se debe desconectar
 	//POR HACER le dice al pozo que el jugador numero player_number murio y que actualice el pozo y el txt
+	return
+}
+
+func winner_player(player_number int) {
+	//POR HACER le dice al jugador numero player_number que gano el juego
+	//POR HACER le dice al pozo que el jugador numero player_number gano
+	//POR HACER no se que mas hace
 	return
 }
 
@@ -153,17 +167,56 @@ func Jugar_F2(cant_jugadores int) {
 }
 
 //Analizis del Lider sobre el tercer juego
-func Jugar_F3() int {
+func Jugar_F3(cant_jugadores int) {
 
+	var sobrevivientes = make([]int, cant_jugadores) //ARREGLO TEMPORAL CON LOS EQUIPOS (1ra mitad: equipo 1/ 2da mitad equipo 2)
+	for i := 0; i < cant_jugadores; i++ {
+		sobrevivientes[i] += (i + 1)
+	}
+
+	//guardar numeros de cada particupante
+	var teams = make([]int, cant_jugadores)
+	for i := 0; i < cant_jugadores; i++ {
+		teams[i] += i //POR HACER sumar valor selecionado por cada jugador
+	}
+
+	//Lider selecciona un valor
 	s3 := rand.NewSource(time.Now().UnixNano() * 100)
 	r3 := rand.New(s3)
+	var valor_lider int = r3.Intn(10) + 1
 
-	return r3.Intn(10) + 1
+	for i := 0; i < cant_jugadores; i++ {
+		teams[i] = Abs(teams[i] - valor_lider)
+	}
+
+	for i := 0; i < cant_jugadores/2; i++ {
+		if teams[2*i] == teams[(2*i)+1] {
+			fmt.Println("AMBOS VIVEN")
+			// ambos viven
+			winner_player(sobrevivientes[2*i])
+			winner_player(sobrevivientes[(2*i)+1])
+		} else if teams[2*i] < teams[(2*i)+1] {
+			fmt.Println(sobrevivientes[2*i])
+			// gana participante 1
+			// muere participante 2
+			kill_player(sobrevivientes[(2*i)+1])
+			winner_player(sobrevivientes[2*i])
+		} else {
+			fmt.Println(sobrevivientes[(2*i)+1])
+			// gana participante 2
+			// muere participante 1
+			kill_player(sobrevivientes[2*i])
+			winner_player(sobrevivientes[(2*i)+1])
+		}
+
+	}
+
+	return
 
 }
 
 func main() {
 
-	Jugar_F2(8)
+	Jugar_F3(8)
 	return
 }

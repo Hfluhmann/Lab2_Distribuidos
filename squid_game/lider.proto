@@ -22,10 +22,9 @@ message PlayerResponse{
 }
 
 service PlayerService{
-    // rpc GetConnection(Interaction) returns (Interaction) {};
-    // rpc SendPlay(Interaction) returns (Interaction) {};
-    // rpc GetPrizePool(Interaction) returns (Interaction) {};
-    // rpc SubscribePlayer(stream PlayerRequest) returns (stream PlayerResponse) {};
-    // rpc CreateConnection(stream PlayerRequest) returns (stream PlayerResponse) {};
     rpc PlayerHandler(stream PlayerRequest) returns (stream PlayerResponse) {};
+    rpc WaitingRoom(stream PlayerRequest) returns (stream PlayerResponse) {};
+    rpc Fase1(stream PlayerRequest) returns (stream PlayerResponse) {};
+    rpc Fase2(stream PlayerRequest) returns (stream PlayerResponse) {};
+    rpc Fase3(stream PlayerRequest) returns (stream PlayerResponse) {};
 }

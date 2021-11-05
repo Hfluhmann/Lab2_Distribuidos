@@ -233,15 +233,30 @@ var file_lider_proto_rawDesc = []byte{
 	0x70, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x18, 0x02, 0x20, 0x01,
 	0x28, 0x05, 0x52, 0x06, 0x70, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x12, 0x1a, 0x0a, 0x08, 0x72, 0x65,
 	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x08, 0x72, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0x53, 0x0a, 0x0d, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72,
-	0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x42, 0x0a, 0x0d, 0x50, 0x6c, 0x61, 0x79, 0x65,
-	0x72, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x72, 0x12, 0x14, 0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72,
-	0x2e, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15,
-	0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x28, 0x01, 0x30, 0x01, 0x42, 0x24, 0x5a, 0x22, 0x4c,
-	0x61, 0x62, 0x32, 0x5f, 0x44, 0x69, 0x73, 0x74, 0x72, 0x69, 0x62, 0x75, 0x69, 0x64, 0x6f, 0x73,
-	0x2f, 0x73, 0x71, 0x75, 0x69, 0x64, 0x5f, 0x67, 0x61, 0x6d, 0x65, 0x2f, 0x6c, 0x69, 0x64, 0x65,
-	0x72, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0xc9, 0x02, 0x0a, 0x0d, 0x50, 0x6c, 0x61, 0x79, 0x65,
+	0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x42, 0x0a, 0x0d, 0x50, 0x6c, 0x61, 0x79,
+	0x65, 0x72, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x72, 0x12, 0x14, 0x2e, 0x6c, 0x69, 0x64, 0x65,
+	0x72, 0x2e, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
+	0x15, 0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x28, 0x01, 0x30, 0x01, 0x12, 0x40, 0x0a, 0x0b,
+	0x57, 0x61, 0x69, 0x74, 0x69, 0x6e, 0x67, 0x52, 0x6f, 0x6f, 0x6d, 0x12, 0x14, 0x2e, 0x6c, 0x69,
+	0x64, 0x65, 0x72, 0x2e, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x1a, 0x15, 0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x28, 0x01, 0x30, 0x01, 0x12, 0x3a,
+	0x0a, 0x05, 0x46, 0x61, 0x73, 0x65, 0x31, 0x12, 0x14, 0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e,
+	0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e,
+	0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x28, 0x01, 0x30, 0x01, 0x12, 0x3a, 0x0a, 0x05, 0x46, 0x61,
+	0x73, 0x65, 0x32, 0x12, 0x14, 0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x50, 0x6c, 0x61, 0x79,
+	0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x6c, 0x69, 0x64, 0x65,
+	0x72, 0x2e, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x22, 0x00, 0x28, 0x01, 0x30, 0x01, 0x12, 0x3a, 0x0a, 0x05, 0x46, 0x61, 0x73, 0x65, 0x33, 0x12,
+	0x14, 0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x50, 0x6c, 0x61, 0x79, 0x65, 0x72, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x2e, 0x50, 0x6c,
+	0x61, 0x79, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x28, 0x01,
+	0x30, 0x01, 0x42, 0x24, 0x5a, 0x22, 0x4c, 0x61, 0x62, 0x32, 0x5f, 0x44, 0x69, 0x73, 0x74, 0x72,
+	0x69, 0x62, 0x75, 0x69, 0x64, 0x6f, 0x73, 0x2f, 0x73, 0x71, 0x75, 0x69, 0x64, 0x5f, 0x67, 0x61,
+	0x6d, 0x65, 0x2f, 0x6c, 0x69, 0x64, 0x65, 0x72, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -264,9 +279,17 @@ var file_lider_proto_goTypes = []interface{}{
 }
 var file_lider_proto_depIdxs = []int32{
 	1, // 0: lider.PlayerService.PlayerHandler:input_type -> lider.PlayerRequest
-	2, // 1: lider.PlayerService.PlayerHandler:output_type -> lider.PlayerResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	1, // 1: lider.PlayerService.WaitingRoom:input_type -> lider.PlayerRequest
+	1, // 2: lider.PlayerService.Fase1:input_type -> lider.PlayerRequest
+	1, // 3: lider.PlayerService.Fase2:input_type -> lider.PlayerRequest
+	1, // 4: lider.PlayerService.Fase3:input_type -> lider.PlayerRequest
+	2, // 5: lider.PlayerService.PlayerHandler:output_type -> lider.PlayerResponse
+	2, // 6: lider.PlayerService.WaitingRoom:output_type -> lider.PlayerResponse
+	2, // 7: lider.PlayerService.Fase1:output_type -> lider.PlayerResponse
+	2, // 8: lider.PlayerService.Fase2:output_type -> lider.PlayerResponse
+	2, // 9: lider.PlayerService.Fase3:output_type -> lider.PlayerResponse
+	5, // [5:10] is the sub-list for method output_type
+	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -347,12 +370,11 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type PlayerServiceClient interface {
-	// rpc GetConnection(Interaction) returns (Interaction) {};
-	// rpc SendPlay(Interaction) returns (Interaction) {};
-	// rpc GetPrizePool(Interaction) returns (Interaction) {};
-	// rpc SubscribePlayer(stream PlayerRequest) returns (stream PlayerResponse) {};
-	// rpc CreateConnection(stream PlayerRequest) returns (stream PlayerResponse) {};
 	PlayerHandler(ctx context.Context, opts ...grpc.CallOption) (PlayerService_PlayerHandlerClient, error)
+	WaitingRoom(ctx context.Context, opts ...grpc.CallOption) (PlayerService_WaitingRoomClient, error)
+	Fase1(ctx context.Context, opts ...grpc.CallOption) (PlayerService_Fase1Client, error)
+	Fase2(ctx context.Context, opts ...grpc.CallOption) (PlayerService_Fase2Client, error)
+	Fase3(ctx context.Context, opts ...grpc.CallOption) (PlayerService_Fase3Client, error)
 }
 
 type playerServiceClient struct {
@@ -394,14 +416,137 @@ func (x *playerServicePlayerHandlerClient) Recv() (*PlayerResponse, error) {
 	return m, nil
 }
 
+func (c *playerServiceClient) WaitingRoom(ctx context.Context, opts ...grpc.CallOption) (PlayerService_WaitingRoomClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_PlayerService_serviceDesc.Streams[1], "/lider.PlayerService/WaitingRoom", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &playerServiceWaitingRoomClient{stream}
+	return x, nil
+}
+
+type PlayerService_WaitingRoomClient interface {
+	Send(*PlayerRequest) error
+	Recv() (*PlayerResponse, error)
+	grpc.ClientStream
+}
+
+type playerServiceWaitingRoomClient struct {
+	grpc.ClientStream
+}
+
+func (x *playerServiceWaitingRoomClient) Send(m *PlayerRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *playerServiceWaitingRoomClient) Recv() (*PlayerResponse, error) {
+	m := new(PlayerResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *playerServiceClient) Fase1(ctx context.Context, opts ...grpc.CallOption) (PlayerService_Fase1Client, error) {
+	stream, err := c.cc.NewStream(ctx, &_PlayerService_serviceDesc.Streams[2], "/lider.PlayerService/Fase1", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &playerServiceFase1Client{stream}
+	return x, nil
+}
+
+type PlayerService_Fase1Client interface {
+	Send(*PlayerRequest) error
+	Recv() (*PlayerResponse, error)
+	grpc.ClientStream
+}
+
+type playerServiceFase1Client struct {
+	grpc.ClientStream
+}
+
+func (x *playerServiceFase1Client) Send(m *PlayerRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *playerServiceFase1Client) Recv() (*PlayerResponse, error) {
+	m := new(PlayerResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *playerServiceClient) Fase2(ctx context.Context, opts ...grpc.CallOption) (PlayerService_Fase2Client, error) {
+	stream, err := c.cc.NewStream(ctx, &_PlayerService_serviceDesc.Streams[3], "/lider.PlayerService/Fase2", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &playerServiceFase2Client{stream}
+	return x, nil
+}
+
+type PlayerService_Fase2Client interface {
+	Send(*PlayerRequest) error
+	Recv() (*PlayerResponse, error)
+	grpc.ClientStream
+}
+
+type playerServiceFase2Client struct {
+	grpc.ClientStream
+}
+
+func (x *playerServiceFase2Client) Send(m *PlayerRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *playerServiceFase2Client) Recv() (*PlayerResponse, error) {
+	m := new(PlayerResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *playerServiceClient) Fase3(ctx context.Context, opts ...grpc.CallOption) (PlayerService_Fase3Client, error) {
+	stream, err := c.cc.NewStream(ctx, &_PlayerService_serviceDesc.Streams[4], "/lider.PlayerService/Fase3", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &playerServiceFase3Client{stream}
+	return x, nil
+}
+
+type PlayerService_Fase3Client interface {
+	Send(*PlayerRequest) error
+	Recv() (*PlayerResponse, error)
+	grpc.ClientStream
+}
+
+type playerServiceFase3Client struct {
+	grpc.ClientStream
+}
+
+func (x *playerServiceFase3Client) Send(m *PlayerRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *playerServiceFase3Client) Recv() (*PlayerResponse, error) {
+	m := new(PlayerResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // PlayerServiceServer is the server API for PlayerService service.
 type PlayerServiceServer interface {
-	// rpc GetConnection(Interaction) returns (Interaction) {};
-	// rpc SendPlay(Interaction) returns (Interaction) {};
-	// rpc GetPrizePool(Interaction) returns (Interaction) {};
-	// rpc SubscribePlayer(stream PlayerRequest) returns (stream PlayerResponse) {};
-	// rpc CreateConnection(stream PlayerRequest) returns (stream PlayerResponse) {};
 	PlayerHandler(PlayerService_PlayerHandlerServer) error
+	WaitingRoom(PlayerService_WaitingRoomServer) error
+	Fase1(PlayerService_Fase1Server) error
+	Fase2(PlayerService_Fase2Server) error
+	Fase3(PlayerService_Fase3Server) error
 }
 
 // UnimplementedPlayerServiceServer can be embedded to have forward compatible implementations.
@@ -410,6 +555,18 @@ type UnimplementedPlayerServiceServer struct {
 
 func (*UnimplementedPlayerServiceServer) PlayerHandler(PlayerService_PlayerHandlerServer) error {
 	return status.Errorf(codes.Unimplemented, "method PlayerHandler not implemented")
+}
+func (*UnimplementedPlayerServiceServer) WaitingRoom(PlayerService_WaitingRoomServer) error {
+	return status.Errorf(codes.Unimplemented, "method WaitingRoom not implemented")
+}
+func (*UnimplementedPlayerServiceServer) Fase1(PlayerService_Fase1Server) error {
+	return status.Errorf(codes.Unimplemented, "method Fase1 not implemented")
+}
+func (*UnimplementedPlayerServiceServer) Fase2(PlayerService_Fase2Server) error {
+	return status.Errorf(codes.Unimplemented, "method Fase2 not implemented")
+}
+func (*UnimplementedPlayerServiceServer) Fase3(PlayerService_Fase3Server) error {
+	return status.Errorf(codes.Unimplemented, "method Fase3 not implemented")
 }
 
 func RegisterPlayerServiceServer(s *grpc.Server, srv PlayerServiceServer) {
@@ -442,6 +599,110 @@ func (x *playerServicePlayerHandlerServer) Recv() (*PlayerRequest, error) {
 	return m, nil
 }
 
+func _PlayerService_WaitingRoom_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(PlayerServiceServer).WaitingRoom(&playerServiceWaitingRoomServer{stream})
+}
+
+type PlayerService_WaitingRoomServer interface {
+	Send(*PlayerResponse) error
+	Recv() (*PlayerRequest, error)
+	grpc.ServerStream
+}
+
+type playerServiceWaitingRoomServer struct {
+	grpc.ServerStream
+}
+
+func (x *playerServiceWaitingRoomServer) Send(m *PlayerResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *playerServiceWaitingRoomServer) Recv() (*PlayerRequest, error) {
+	m := new(PlayerRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func _PlayerService_Fase1_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(PlayerServiceServer).Fase1(&playerServiceFase1Server{stream})
+}
+
+type PlayerService_Fase1Server interface {
+	Send(*PlayerResponse) error
+	Recv() (*PlayerRequest, error)
+	grpc.ServerStream
+}
+
+type playerServiceFase1Server struct {
+	grpc.ServerStream
+}
+
+func (x *playerServiceFase1Server) Send(m *PlayerResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *playerServiceFase1Server) Recv() (*PlayerRequest, error) {
+	m := new(PlayerRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func _PlayerService_Fase2_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(PlayerServiceServer).Fase2(&playerServiceFase2Server{stream})
+}
+
+type PlayerService_Fase2Server interface {
+	Send(*PlayerResponse) error
+	Recv() (*PlayerRequest, error)
+	grpc.ServerStream
+}
+
+type playerServiceFase2Server struct {
+	grpc.ServerStream
+}
+
+func (x *playerServiceFase2Server) Send(m *PlayerResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *playerServiceFase2Server) Recv() (*PlayerRequest, error) {
+	m := new(PlayerRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func _PlayerService_Fase3_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(PlayerServiceServer).Fase3(&playerServiceFase3Server{stream})
+}
+
+type PlayerService_Fase3Server interface {
+	Send(*PlayerResponse) error
+	Recv() (*PlayerRequest, error)
+	grpc.ServerStream
+}
+
+type playerServiceFase3Server struct {
+	grpc.ServerStream
+}
+
+func (x *playerServiceFase3Server) Send(m *PlayerResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *playerServiceFase3Server) Recv() (*PlayerRequest, error) {
+	m := new(PlayerRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 var _PlayerService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "lider.PlayerService",
 	HandlerType: (*PlayerServiceServer)(nil),
@@ -450,6 +711,30 @@ var _PlayerService_serviceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "PlayerHandler",
 			Handler:       _PlayerService_PlayerHandler_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "WaitingRoom",
+			Handler:       _PlayerService_WaitingRoom_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "Fase1",
+			Handler:       _PlayerService_Fase1_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "Fase2",
+			Handler:       _PlayerService_Fase2_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "Fase3",
+			Handler:       _PlayerService_Fase3_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},

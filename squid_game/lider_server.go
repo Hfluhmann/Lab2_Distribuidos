@@ -27,7 +27,7 @@ func main(){
 	//server := &lider.Server{connections}
 
 	grpcServer := grpc.NewServer()
-	lider.RegisterPlayerServiceServer(grpcServer, &lider.Server{connections})
+	lider.RegisterPlayerServiceServer(grpcServer, &lider.Server{connections, 0})
 	err = grpcServer.Serve(lis) // bind server
 
 	if err != nil {

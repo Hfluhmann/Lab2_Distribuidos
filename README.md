@@ -12,3 +12,12 @@ export PATH="$PATH:$(go env GOPATH)/bin"
 ```bash
 protoc --go_out=plugins=grpc:<DIROUT> --go_opt=paths=source_relative <FILENAME>.proto
 ```
+
+# Install RabbitMQ
+```bash
+apt update
+apt install rabbitmq-server
+service rabbitmq-server start
+rabbitmqctl add_user 'client' '1234'
+rabbitmqctl set_permissions -p "name" "client" ".*" ".*" ".*"
+```

@@ -1,6 +1,7 @@
 package lider
 
 import (
+	"fmt"
 	"io"
 	"log"
 
@@ -34,10 +35,21 @@ type Server struct {
 	Connected_players int
 	Round             int
 	Contestados       int
+	Team1             int
+	Team2             int
+	Jugadores2        int
+	Jugadores3        int
 	Change_fase       bool
 	Change_round      bool
 	Players_data      [16]*Player
 	Randoms           []int
+}
+
+func Abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
 }
 
 func check_error(e error, msg string) bool {
@@ -244,8 +256,93 @@ func (s *Server) Fase1P2(stream PlayerService_Fase1P2Server) error {
 	return nil
 }
 func (s *Server) Fase2(stream PlayerService_Fase2Server) error {
+
+	valor_lider := s.Randoms[4]
+
+	//ver que onda con los equipos y con conseguir los valores
+
+	//sacar suma de resultados de cada team
+	/*
+		for i := 0; i < cant_jugadores; i++ {
+			if i < cant_jugadores/2 {
+				team1 += teams[i]
+			} else {
+				team2 += teams[i]
+			}
+		}*/
+
+	if valor_lider%2 != s.Team1%2 && valor_lider%2 != s.Team2%2 {
+		//Matar equipo random
+
+		perdedor := s.Randoms[7]
+		if perdedor == 0 {
+			//Matar equipo 1
+			log.Printf("MATADO EL EQUIPO 1")
+			/*
+				for i := 0; i < cant_jugadores/2; i++ {
+					kill_player(sobrevivientes[i])
+				}*/
+		} else {
+
+			log.Printf("MATADO EL EQUIPO 2")
+			/*
+				for i := cant_jugadores / 2; i < cant_jugadores; i++ {
+					kill_player(sobrevivientes[i])
+				}*/
+		}
+
+	} else if valor_lider%2 != s.Team1%2 && valor_lider%2 == s.Team2%2 {
+		//Matar equipo 1
+		log.Printf("MATADO EL EQUIPO 1")
+		/*
+			for i := 0; i < cant_jugadores/2; i++ {
+				kill_player(sobrevivientes[i])
+			}*/
+
+	} else if valor_lider%2 == s.Team1%2 && valor_lider%2 != s.Team2%2 {
+		//Matar equipo 2
+		log.Printf("MATADO EL EQUIPO 2")
+		/*
+			for i := cant_jugadores / 2; i < cant_jugadores; i++ {
+				kill_player(sobrevivientes[i])
+			}*/
+	}
+
 	return nil
 }
 func (s *Server) Fase3(stream PlayerService_Fase3Server) error {
+
+	valor_lider := s.Randoms[5]
+
+	//POR HACER pedir valores y guardarlos en arreglo
+
+	//ver diferencia de valores
+	for i := 0; i < s.Jugadores3; i++ {
+		teams[i] = Abs(teams[i] - valor_lider)
+	}
+
+	for i := 0; i < s.Jugadores3/2; i++ {
+		if teams[2*i] == teams[(2*i)+1] {
+			fmt.Println("AMBOS VIVEN")
+			// ambos viven
+			/*
+				winner_player(sobrevivientes[2*i])
+				winner_player(sobrevivientes[(2*i)+1])*/
+		} else if teams[2*i] < teams[(2*i)+1] {
+			// gana participante 1
+			// muere participante 2
+			/*
+				kill_player(sobrevivientes[(2*i)+1])
+				winner_player(sobrevivientes[2*i])*/
+		} else {
+			// gana participante 2
+			// muere participante 1
+			/*
+				kill_player(sobrevivientes[2*i])
+				winner_player(sobrevivientes[(2*i)+1])*/
+		}
+
+	}
+
 	return nil
 }

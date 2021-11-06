@@ -67,6 +67,10 @@ func main() {
 		Connected_players: 0,
 		Change_fase:       false,
 		Players_data:      playersData,
+		Team1:             0,
+		Team2:             0,
+		Jugadores2:        0,
+		Jugadores3:        0,
 		Randoms:           randoms,
 		Change_round:      false,
 		Round:             0,
@@ -121,8 +125,48 @@ func main() {
 						server.Contestados = 0
 					}
 				} else if server.Fase == 2 {
+
+					//POR TERMINAR si jugadores impares quitar uno con server.Randoms[6]
+					for server.Connected_players%2 == 1 {
+
+						if server.Connection[server.Randoms[6]-1].active == true {
+							// matar jugador de la posicion
+						} else {
+							if server.Randoms[6] == 16 {
+								server.Randoms[6] = 1
+							} else {
+								server.Randoms[6] += 1
+							}
+
+						}
+
+					}
+
+					server.Jugadores2 = server.Connected_players
+					//POR HACER crear un arreglo con los jugadores que quedan
+
 					continue
 				} else if server.Fase == 3 {
+
+					//POR TERMINAR si jugadores impares quitar uno con server.Randoms[8]
+					for server.Connected_players%2 == 1 {
+
+						if server.Connection[server.Randoms[8]-1].active == true {
+							// matar jugador de la posicion
+						} else {
+							if server.Randoms[8] == 16 {
+								server.Randoms[8] = 1
+							} else {
+								server.Randoms[8] += 1
+							}
+
+						}
+
+					}
+
+					server.Jugadores3 = server.Connected_players //POR HACER crear UN arreglo con tamaño server.Jugadores3 que
+					//POR HACER crear un arreglo con los jugadores que quedan
+
 					continue
 				} else {
 					log.Printf("Ha terminado esta version de Squid Game")

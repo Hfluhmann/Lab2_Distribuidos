@@ -4,16 +4,17 @@ option go_package = "Lab2_Distribuidos/squid_game/pozo"; // specify the package 
 package pozo;
 
 message PozoRequest {
-    int32 Player
-    int32 Ronda
+    int32 type = 1;
+    int32 player = 2;
+    int32 ronda = 3;
 }
 
 message PozoResponse {
-    int32 Cantidad
+    int32 type = 1;
+    int32 response = 2;
 }
 
 service PozoService {
-    rpc Depositar ( stream PozoRequest ) returns ( stream PozoResponse ) {};
     rpc Consultar ( stream PozoRequest ) returns ( stream PozoResponse ) {};
 }
 

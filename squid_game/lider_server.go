@@ -101,6 +101,7 @@ func main() {
 
 				if server.Fase == 1 {
 					for i := 0; i < 4; i++ {
+						log.Printf("estoy imprimiendo la rinda %d", i)
 						if server.Connected_players == 0 {
 							log.Printf("No quedan jugadores\nHa terminado esta version de Squid Game")
 							return
@@ -113,6 +114,7 @@ func main() {
 							server.Change_round = true
 						}
 						for server.Contestados < server.Connected_players {
+							log.Printf("-------------- Esperando Jugadas")
 							time.Sleep(2 * time.Second)
 						}
 						server.Change_round = false

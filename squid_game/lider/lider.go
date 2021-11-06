@@ -169,13 +169,17 @@ func comparar(valor_jugador int, valor_lider int) bool {
 
 func (s *Server) Fase1P1(stream PlayerService_Fase1P1Server) error {
 	log.Printf("Fase 1 Iniciada")
-	/*
-		for !s.Change_round {
-			time.Sleep(2 * time.Second)
-		}*/
+	log.Printf("Ronda Server: %d. Change Round: %d", s.Round, s.Change_round)
 
-	resp := PlayerResponse{Type: 1, Response: 1, Round: int32(s.Round)}
-	err := stream.Send(&resp)
+	for !s.Change_round {
+		//log.Printf("Esperando cambio de ronda")
+		time.Sleep(2 * time.Second)
+		resp := PlayerResponse{Type: 1, Response: 1, Round: int32(s.Round)}
+		err := stream.Send(&resp)
+		check_error(err, "")
+	}
+	// resp := PlayerResponse{Type: 1, Response: 1, Round: int32(s.Round)}
+	// err := stream.Send(&resp)
 
 	// El lider selecciona un valor entre 6 y 10
 	valor_lider := s.Randoms[s.Round]

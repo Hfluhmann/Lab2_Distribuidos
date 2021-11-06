@@ -60,6 +60,10 @@ func main() {
 
 	}
 
+	var jugadoresFase2 []int
+	var jugadoresFase3 []int
+	var respuestasFase3 [16]int
+
 	server := &lider.Server{
 		Connection:        connections,
 		Fase:              0,
@@ -75,6 +79,9 @@ func main() {
 		Change_round:      false,
 		Round:             0,
 		Contestados:       0,
+		JugadoresFase2:    jugadoresFase2,
+		JugadoresFase3:    jugadoresFase3,
+		RespuestasFase3:   respuestasFase3,
 	}
 
 	go func() {
@@ -124,13 +131,15 @@ func main() {
 						server.Change_round = false
 						server.Contestados = 0
 					}
-				} else if server.Fase == 2 {
 
 					//POR TERMINAR si jugadores impares quitar uno con server.Randoms[6]
 					for server.Connected_players%2 == 1 {
 
-						if server.Connection[server.Randoms[6]-1].active == true {
+						if server.Connection[server.Randoms[6]-1].Active == true {
 							// matar jugador de la posicion
+							server.Connection[server.Randoms[6]-1].Active = false
+							server.Connected_players -= 1
+
 						} else {
 							if server.Randoms[6] == 16 {
 								server.Randoms[6] = 1
@@ -142,17 +151,18 @@ func main() {
 
 					}
 
+				} else if server.Fase == 2 {
+
 					server.Jugadores2 = server.Connected_players
-					//POR HACER crear un arreglo con los jugadores que quedan
 
-					continue
-				} else if server.Fase == 3 {
-
-					//POR TERMINAR si jugadores impares quitar uno con server.Randoms[8]
 					for server.Connected_players%2 == 1 {
 
-						if server.Connection[server.Randoms[8]-1].active == true {
+						if server.Connection[server.Randoms[8]-1].Active == true {
 							// matar jugador de la posicion
+
+							server.Connection[server.Randoms[8]-1].Active = false
+							server.Connected_players -= 1
+
 						} else {
 							if server.Randoms[8] == 16 {
 								server.Randoms[8] = 1
@@ -163,6 +173,11 @@ func main() {
 						}
 
 					}
+
+					continue
+				} else if server.Fase == 3 {
+
+					//POR TERMINAR si jugadores impares quitar uno con server.Randoms[8]
 
 					server.Jugadores3 = server.Connected_players //POR HACER crear UN arreglo con tamaño server.Jugadores3 que
 					//POR HACER crear un arreglo con los jugadores que quedan

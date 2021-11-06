@@ -164,6 +164,108 @@ func fase1(fase int32, player_id int32, ip string) {
 	}
 }
 
+func fase2(fase int32, player_id int32, ip string) {
+	//POR HACER checkear que no fue eliminado por sobrar al comenzar la ronda
+
+	log.Println("\n---------------------------------------------")
+	log.Printf("Bienvenido al segundo juego, jugador %d\nEspera a que te demos la orden para comenzar...", player_id)
+
+	conn, err := grpc.Dial(ip+":9000", grpc.WithInsecure())
+	check_error(err, "Error al conectar con el servidor")
+	defer conn.Close()
+
+	c := lider.NewPlayerServiceClient(conn)
+	stream, err := c.Fase2(context.Background())
+	if !check_error(err, "Error al crear el stream fase 1") {
+
+		check := &lider.PlayerRequest{Type: 2, Player: player_id}
+		err = stream.Send(check)
+
+		res, err := stream.Recv()
+
+		check_error(err, "")
+
+		if res.Response == 0 {
+			return
+		}
+
+		s1 := rand.NewSource(time.Now().UnixNano() * int64(player_id))
+		r1 := rand.New(s1)
+		var value int = int(r1.Intn(4) + 1)
+
+		log.Printf("Enviando valor: %d", value)
+		// send player request to stream
+		req := &lider.PlayerRequest{Type: 1, Player: player_id, Play: int32(value)}
+		err = stream.Send(req)
+
+		res, err = stream.Recv()
+
+		check_error(err, "Error al recibir la respuesta de la jugada en fase 2")
+		if res.Type == 1 {
+			if res.Response == 0 {
+				log.Printf("Has muerto R.I.P.")
+				return
+			} else if res.Response == 1 {
+				log.Printf("Has sobrevivido a la ronda")
+			}
+		}
+
+	}
+
+	return
+}
+
+func fase3(fase int32, player_id int32, ip string) {
+	//POR HACER checkear que no fue eliminado por sobrar al comenzar la ronda
+
+	log.Println("\n---------------------------------------------")
+	log.Printf("Bienvenido al tercer juego, jugador %d\nEspera a que te demos la orden para comenzar...", player_id)
+
+	conn, err := grpc.Dial(ip+":9000", grpc.WithInsecure())
+	check_error(err, "Error al conectar con el servidor")
+	defer conn.Close()
+
+	c := lider.NewPlayerServiceClient(conn)
+	stream, err := c.Fase3(context.Background())
+	if !check_error(err, "Error al crear el stream fase 1") {
+
+		check := &lider.PlayerRequest{Type: 2, Player: player_id}
+		err = stream.Send(check)
+
+		res, err := stream.Recv()
+
+		check_error(err, "")
+
+		if res.Response == 0 {
+			return
+		}
+
+		s1 := rand.NewSource(time.Now().UnixNano() * int64(player_id))
+		r1 := rand.New(s1)
+		var value int = int(r1.Intn(10) + 1)
+
+		log.Printf("Enviando valor: %d", value)
+		// send player request to stream
+		req := &lider.PlayerRequest{Type: 1, Player: player_id, Play: int32(value)}
+		err = stream.Send(req)
+
+		res, err = stream.Recv()
+
+		check_error(err, "Error al recibir la respuesta de la jugada en fase 3")
+		if res.Type == 1 {
+			if res.Response == 0 {
+				log.Printf("Has muerto R.I.P.")
+				return
+			} else if res.Response == 1 {
+				log.Printf("Has sobrevivido a la ronda y ganado el juego")
+			}
+		}
+
+	}
+
+	return
+}
+
 func main() {
 	ip := "172.17.0.2"
 

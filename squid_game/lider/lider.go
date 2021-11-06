@@ -22,9 +22,9 @@ type Player struct {
 }
 
 type Connection struct {
-	id     int
-	active bool
-	jugada int
+	Id     int
+	Active bool
+	Jugada int
 	error  chan error
 }
 
@@ -43,6 +43,9 @@ type Server struct {
 	Change_round      bool
 	Players_data      [16]*Player
 	Randoms           []int
+	JugadoresFase2    []int
+	JugadoresFase3    []int
+	RespuestasFase3   [16]int
 }
 
 func Abs(x int) int {
@@ -67,9 +70,9 @@ func ConnectPlayer(req *PlayerRequest, stream PlayerService_PlayerHandlerServer,
 
 		player_id := len(s.Connection) + 1
 		conn := &Connection{
-			id:     player_id,
-			active: true,
-			jugada: 0,
+			Id:     player_id,
+			Active: true,
+			Jugada: 0,
 			error:  make(chan error),
 		}
 
@@ -207,20 +210,20 @@ func (s *Server) Fase1P1(stream PlayerService_Fase1P1Server) error {
 	check_error(err, "Error al recibir jugada")
 	log.Printf("Jugador %d. Resp: %d", player_id, req.Play)
 
-	s.Connection[req.Player-1].jugada = int(req.Play)
+	s.Connection[req.Player-1].Jugada = int(req.Play)
 
-	if s.Connection[req.Player-1].active == true {
+	if s.Connection[req.Player-1].Active == true {
 
 		var movimiento bool = comparar(int(req.Play), valor_lider) //POR HACER se esta usando un valor generico 7 como valor del juagdor
 		if movimiento {
-			s.Connection[req.Player-1].jugada += int(req.Play) //POR HACER se suma el puntaje que puso el jugador
+			s.Connection[req.Player-1].Jugada += int(req.Play) //POR HACER se suma el puntaje que puso el jugador
 
 			// notificar al player que sobrevivio
 			resp := PlayerResponse{Type: 1, Response: 1}
 			err := stream.Send(&resp)
 			check_error(err, "Error al notificar al player que sobrevivio la ronda")
 		} else {
-			s.Connection[req.Player-1].active = false
+			s.Connection[req.Player-1].Active = false
 			s.Connected_players -= 1
 			// notificar al player que murio
 			resp := PlayerResponse{Type: 1, Response: 0}
@@ -238,9 +241,9 @@ func (s *Server) Fase1P2(stream PlayerService_Fase1P2Server) error {
 	req, err := stream.Recv()
 	player_id := req.Player
 	check_error(err, "No se pudo determinar el numero de jugador")
-	if s.Connection[player_id-1].active == true {
-		if s.Connection[player_id-1].jugada < 21 {
-			s.Connection[player_id].active = false
+	if s.Connection[player_id-1].Active == true {
+		if s.Connection[player_id-1].Jugada < 21 {
+			s.Connection[player_id].Active = false
 
 			//notificar al player que murio
 			resp := PlayerResponse{Type: 1, Response: 0}
@@ -257,89 +260,208 @@ func (s *Server) Fase1P2(stream PlayerService_Fase1P2Server) error {
 }
 func (s *Server) Fase2(stream PlayerService_Fase2Server) error {
 
+	Check, err := stream.Recv()
+	if s.Connection[Check.Player].Active {
+		che := PlayerResponse{Type: 2, Response: int32(1)}
+		err = stream.Send(&che)
+	} else {
+		che := PlayerResponse{Type: 2, Response: int32(0)}
+		err = stream.Send(&che)
+	}
+
 	valor_lider := s.Randoms[4]
 
 	//ver que onda con los equipos y con conseguir los valores
 
+	req, err := stream.Recv()
+	s.JugadoresFase2 = append(s.JugadoresFase2, int(req.Player))
+	check_error(err, "aaaa")
+
 	//sacar suma de resultados de cada team
-	/*
-		for i := 0; i < cant_jugadores; i++ {
-			if i < cant_jugadores/2 {
-				team1 += teams[i]
-			} else {
-				team2 += teams[i]
-			}
-		}*/
+	for i := 0; i < s.Jugadores2; i++ {
+		if s.JugadoresFase2[i] == int(req.Player) && i < s.Jugadores2/2 {
+			s.Team1 += int(req.Play)
+		} else if s.JugadoresFase2[i] == int(req.Player) && i >= s.Jugadores2/2 {
+			s.Team2 += int(req.Play)
+		}
+	}
 
 	if valor_lider%2 != s.Team1%2 && valor_lider%2 != s.Team2%2 {
 		//Matar equipo random
 
 		perdedor := s.Randoms[7]
+
 		if perdedor == 0 {
 			//Matar equipo 1
 			log.Printf("MATADO EL EQUIPO 1")
-			/*
-				for i := 0; i < cant_jugadores/2; i++ {
-					kill_player(sobrevivientes[i])
-				}*/
+
+			for i := 0; i < s.Jugadores2; i++ {
+
+				if s.JugadoresFase2[i] == int(req.Player) && i < s.Jugadores2/2 {
+
+					s.Connection[req.Player-1].Active = false
+					s.Connected_players -= 1
+					// notificar al player que murio
+					resp := PlayerResponse{Type: 1, Response: 0}
+					err := stream.Send(&resp)
+					check_error(err, "Error al notificar al player que murio en la ronda")
+
+				}
+
+			}
+
 		} else {
 
 			log.Printf("MATADO EL EQUIPO 2")
-			/*
-				for i := cant_jugadores / 2; i < cant_jugadores; i++ {
-					kill_player(sobrevivientes[i])
-				}*/
+
+			for i := 0; i < s.Jugadores2; i++ {
+
+				if s.JugadoresFase2[i] == int(req.Player) && i >= s.Jugadores2/2 {
+
+					s.Connection[req.Player-1].Active = false
+					s.Connected_players -= 1
+					// notificar al player que murio
+					resp := PlayerResponse{Type: 1, Response: 0}
+					err := stream.Send(&resp)
+					check_error(err, "Error al notificar al player que murio en la ronda")
+
+				}
+
+			}
+
 		}
 
 	} else if valor_lider%2 != s.Team1%2 && valor_lider%2 == s.Team2%2 {
 		//Matar equipo 1
 		log.Printf("MATADO EL EQUIPO 1")
-		/*
-			for i := 0; i < cant_jugadores/2; i++ {
-				kill_player(sobrevivientes[i])
-			}*/
+
+		for i := 0; i < s.Jugadores2; i++ {
+
+			if s.JugadoresFase2[i] == int(req.Player) && i < s.Jugadores2/2 {
+
+				s.Connection[req.Player-1].Active = false
+				s.Connected_players -= 1
+				// notificar al player que murio
+				resp := PlayerResponse{Type: 1, Response: 0}
+				err := stream.Send(&resp)
+				check_error(err, "Error al notificar al player que murio en la ronda")
+
+			}
+
+		}
 
 	} else if valor_lider%2 == s.Team1%2 && valor_lider%2 != s.Team2%2 {
 		//Matar equipo 2
 		log.Printf("MATADO EL EQUIPO 2")
-		/*
-			for i := cant_jugadores / 2; i < cant_jugadores; i++ {
-				kill_player(sobrevivientes[i])
-			}*/
+
+		for i := 0; i < s.Jugadores2; i++ {
+
+			if s.JugadoresFase2[i] == int(req.Player) && i >= s.Jugadores2/2 {
+
+				s.Connection[req.Player-1].Active = false
+				s.Connected_players -= 1
+				// notificar al player que murio
+				resp := PlayerResponse{Type: 1, Response: 0}
+				err := stream.Send(&resp)
+				check_error(err, "Error al notificar al player que murio en la ronda")
+
+			}
+
+		}
+
 	}
+
+	resp := PlayerResponse{Type: 1, Response: 1}
+	err = stream.Send(&resp)
+	check_error(err, "Error al notificar al player que sobrevivio la ronda")
 
 	return nil
 }
 func (s *Server) Fase3(stream PlayerService_Fase3Server) error {
 
+	Check, err := stream.Recv()
+	if s.Connection[Check.Player].Active {
+		che := PlayerResponse{Type: 2, Response: int32(1)}
+		err = stream.Send(&che)
+	} else {
+		che := PlayerResponse{Type: 2, Response: int32(0)}
+		err = stream.Send(&che)
+	}
+
 	valor_lider := s.Randoms[5]
+
+	//ver que onda con los equipos y con conseguir los valores
+
+	req, err := stream.Recv()
+	s.JugadoresFase3 = append(s.JugadoresFase2, int(req.Player))
+	check_error(err, "aaaa de la fase 3")
 
 	//POR HACER pedir valores y guardarlos en arreglo
 
 	//ver diferencia de valores
+
 	for i := 0; i < s.Jugadores3; i++ {
-		teams[i] = Abs(teams[i] - valor_lider)
+		if s.JugadoresFase3[i] == int(req.Player) {
+			s.RespuestasFase3[i] = Abs(int(req.Play) - valor_lider)
+		}
 	}
 
 	for i := 0; i < s.Jugadores3/2; i++ {
-		if teams[2*i] == teams[(2*i)+1] {
+		if s.RespuestasFase3[2*i] == s.RespuestasFase3[(2*i)+1] {
 			fmt.Println("AMBOS VIVEN")
-			// ambos viven
-			/*
-				winner_player(sobrevivientes[2*i])
-				winner_player(sobrevivientes[(2*i)+1])*/
-		} else if teams[2*i] < teams[(2*i)+1] {
-			// gana participante 1
-			// muere participante 2
-			/*
-				kill_player(sobrevivientes[(2*i)+1])
-				winner_player(sobrevivientes[2*i])*/
+
+			if s.JugadoresFase3[2*i] == int(req.Player) || s.JugadoresFase3[(2*i)+1] == int(req.Player) {
+
+				// ambos viven
+				resp := PlayerResponse{Type: 1, Response: 1}
+				err = stream.Send(&resp)
+				check_error(err, "Error al notificar al player que sobrevivio la ronda")
+
+			}
+		} else if s.RespuestasFase3[2*i] < s.RespuestasFase3[(2*i)+1] {
+
+			if s.JugadoresFase3[2*i] == int(req.Player) {
+
+				//gana participante 1
+				resp := PlayerResponse{Type: 1, Response: 1}
+				err = stream.Send(&resp)
+				check_error(err, "Error al notificar al player que sobrevivio la ronda")
+
+			}
+			if s.JugadoresFase3[(2*i)+1] == int(req.Player) {
+				// muere participante 2
+
+				s.Connection[req.Player-1].Active = false
+				s.Connected_players -= 1
+				// notificar al player que murio
+				resp := PlayerResponse{Type: 1, Response: 0}
+				err := stream.Send(&resp)
+				check_error(err, "Error al notificar al player que murio en la ronda")
+
+			}
+
 		} else {
-			// gana participante 2
-			// muere participante 1
-			/*
-				kill_player(sobrevivientes[2*i])
-				winner_player(sobrevivientes[(2*i)+1])*/
+
+			if s.JugadoresFase3[(2*i)+1] == int(req.Player) {
+
+				// gana participante 2
+				resp := PlayerResponse{Type: 1, Response: 1}
+				err = stream.Send(&resp)
+				check_error(err, "Error al notificar al player que sobrevivio la ronda")
+
+			}
+			if s.JugadoresFase3[2*i] == int(req.Player) {
+				// muere participante 1
+
+				s.Connection[req.Player-1].Active = false
+				s.Connected_players -= 1
+				// notificar al player que murio
+				resp := PlayerResponse{Type: 1, Response: 0}
+				err := stream.Send(&resp)
+				check_error(err, "Error al notificar al player que murio en la ronda")
+
+			}
+
 		}
 
 	}

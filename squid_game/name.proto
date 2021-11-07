@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option go_package = "Lab2_Distribuidos/squid_game/name"; // specify the package directory
+package name;
+
+message NameRequest {
+    int32 player = 1;
+    int32 ronda = 2;
+    repeated int32 jugadas = 3;
+}
+
+message NameResponse {
+    int32 type = 1;
+    int32 response = 2;
+    repeated int32 jugadas = 3;
+}
+
+service NameService {
+    rpc Registrar ( stream NameRequest ) returns ( stream NameResponse ) {};
+    rpc ObtenerJugadas ( stream NameRequest ) returns ( stream NameResponse ) {};
+}
+

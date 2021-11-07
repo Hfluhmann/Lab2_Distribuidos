@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option go_package = "Lab2_Distribuidos/squid_game/data"; // specify the package directory
+package data;
+
+message DataRequest {
+    int32 player = 1;
+    int32 ronda = 2;
+    repeated int32 jugadas = 3;
+}
+
+message DataResponse {
+    int32 type = 1;
+    int32 response = 2;
+    repeated int32 jugadas = 3;
+}
+
+service DataService {
+    rpc RegistrarJugadas ( stream DataRequest ) returns ( stream DataResponse ) {};
+    rpc ObtenerJugadas ( stream DataRequest ) returns ( stream DataResponse ) {};
+}
+

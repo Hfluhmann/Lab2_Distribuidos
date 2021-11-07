@@ -11,6 +11,7 @@ import (
 	"google.golang.org/grpc"
 
 	"Lab2_Distribuidos/squid_game/lider"
+	"Lab2_Distribuidos/squid_game/pozo"
 )
 
 func check_error(e error, msg string) bool {
@@ -100,6 +101,24 @@ func conexion(ip string) (fase int32, player_id int32) {
 	return fase, player_id
 }
 
+func save_jugadas(jugadas []int32, player_id int32, ip string){ 
+	conn, err := grpc.Dial(ip+":9000", grpc.WithInsecure())
+	check_error(err, "Error al conectar con el servidor")
+	defer conn.Close()
+
+	c := lider.NewPlayerServiceClient(conn)
+	stream_save, err := c.SaveJugadasRonda1(context.Background())
+	check_error(err, "Error al crear el stream de guardado")
+
+	//send jugadas to stream
+	req := &lider.PlayerRequest{Type: 1, Player: player_id, Jugadas: jugadas} 
+	err = stream_save.Send(req)
+
+	//receive response from stream
+	_, err = stream_save.Recv()
+	check_error(err, "Error al recibir la respuesta")
+}
+
 func fase1(fase int32, player_id int32, ip string, human bool) bool {
 
 	log.Println("\n---------------------------------------------")
@@ -111,6 +130,7 @@ func fase1(fase int32, player_id int32, ip string, human bool) bool {
 
 	c := lider.NewPlayerServiceClient(conn)
 	total := 0
+	var jugadas []int32
 	for i := 0; i < 4; i++ {
 		stream, err := c.Fase1P1(context.Background())
 		if !check_error(err, "Error al crear el stream fase 1") {
@@ -136,6 +156,7 @@ func fase1(fase int32, player_id int32, ip string, human bool) bool {
 			}
 
 			total += value
+			jugadas = append(jugadas, int32(value))
 
 			log.Printf("Enviando valor: %d", value)
 			// send player request to stream
@@ -148,6 +169,7 @@ func fase1(fase int32, player_id int32, ip string, human bool) bool {
 			if res.Type == 1 {
 				if res.Response == 0 {
 					log.Printf("Has muerto R.I.P.")
+					save_jugadas(jugadas, player_id, ip)
 					return false
 				} else if res.Response == 1 {
 					log.Printf("Has sobrevivido a la ronda")
@@ -166,10 +188,14 @@ func fase1(fase int32, player_id int32, ip string, human bool) bool {
 	if res.Type == 1 {
 		if res.Response == 0 {
 			log.Printf("Has muerto R.I.P.")
+			save_jugadas(jugadas, player_id, ip)
+			return false
 		} else {
 			log.Printf("Has sobrevivido al juego")
 		}
 	}
+
+	save_jugadas(jugadas, player_id, ip)
 	return true
 }
 
@@ -277,28 +303,52 @@ func fase3(fase int32, player_id int32, ip string) {
 
 func main() {
 	ip := "172.17.0.4"
+	ip_pozo := "172.17.0.5"
 
 	fase, player_id := conexion(ip)
 	
 	
-	// read in from stdin
-	var option int
-	fmt.Println("\n1. Jugador Bot\n2. Jugador Humano")
-	fmt.Scanf("%d", &option)
+	fmt.Println("\n---------------------------------------------")
+	fmt.Println("1. Jugar\n2.Consultar pozo\n3.Salir")
+	var opcion int
+	fmt.Scanf("%d", &opcion)
+	if opcion == 1 {
+		fmt.Println("\n1. Jugador Bot\n2. Jugador Humano")
+		fmt.Scanf("%d", &opcion)
 
-	if option == 1 {
-		flag := fase1(fase, player_id, ip, false)
-		if flag {
-			fase2(fase, player_id, ip)
-		}
-		// fase3(fase, player_id, ip)
+		if opcion == 1 {
+			fase1(fase, player_id, ip, false)
+			// flag := fase1(fase, player_id, ip, false)
+			// if flag {
+			// 	fase2(fase, player_id, ip)
+			// }
+			// fase3(fase, player_id, ip)
 
-	} else if option == 2 {
-		flag := fase1(fase, player_id, ip, true)
-		if flag {
-			fase2(fase, player_id, ip)
+		} else if opcion == 2 {
+			fase1(fase, player_id, ip, true)
+			// flag := fase1(fase, player_id, ip, true)
+			// if flag {
+			// 	fase2(fase, player_id, ip)
+			// }
+			// fase3(fase, player_id, ip)
 		}
-		// fase3(fase, player_id, ip)
+	} else if opcion == 2 {
+		conn, err := grpc.Dial(ip_pozo+":9001", grpc.WithInsecure())
+		check_error(err, "Error al conectar con el servidor del pozo")
+		defer conn.Close()
+	
+		c := pozo.NewPozoServiceClient(conn)
+		stream, err := c.Consultar(context.Background())
+		check_error(err, "Error al crear el stream")
+	
+		resp, err := stream.Recv()
+		if check_error(err, "Error al recibir respuesta del servidor"){
+			return
+		}
+		log.Printf("Recibido: %d", resp.Response)
+	} else if opcion == 3 {
+		return
 	}
+	
 
 }

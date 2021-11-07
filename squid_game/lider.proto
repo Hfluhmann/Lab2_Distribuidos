@@ -15,6 +15,7 @@ message PlayerRequest{
     int32 play = 3; // content of the play
     int32 round = 4; // round number
     int32 total = 5; 
+    repeated int32 jugadas = 6; // list of moves
 }
 
 message PlayerResponse{
@@ -31,4 +32,5 @@ service PlayerService{
     rpc Fase1P2(stream PlayerRequest) returns (stream PlayerResponse) {};
     rpc Fase2(stream PlayerRequest) returns (stream PlayerResponse) {};
     rpc Fase3(stream PlayerRequest) returns (stream PlayerResponse) {};
+    rpc SaveJugadasRonda1(stream PlayerRequest) returns (stream PlayerResponse) {};
 }

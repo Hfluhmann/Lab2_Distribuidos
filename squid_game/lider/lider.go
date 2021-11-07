@@ -8,18 +8,11 @@ import (
 	//"os"
 	"time"
 	//"fmt"
-	//"golang.org/x/net/context"
+	"golang.org/x/net/context"
+	"github.com/streadway/amqp"
+	"Lab2_Distribuidos/squid_game/name"
+	"google.golang.org/grpc"
 )
-
-type Round struct {
-	Plays []int
-}
-
-type Player struct {
-	Round1 *Round
-	Round2 *Round
-	Round3 *Round
-}
 
 type Connection struct {
 	Id     int
@@ -41,11 +34,11 @@ type Server struct {
 	Jugadores3        int
 	Change_fase       bool
 	Change_round      bool
+	Writed		      bool
 	R1				  int
 	R2				  int
 	R3				  int
 	R4				  int
-	Players_data      [16]*Player
 	Randoms           []int
 	JugadoresFase2    []int
 	JugadoresFase3    []int
@@ -58,6 +51,12 @@ func Abs(x int) int {
 	}
 	return x
 }
+
+func failOnError(err error, msg string) {
+	if err != nil {
+	  log.Fatalf("%s: %s", msg, err)
+	}
+  }
 
 func check_error(e error, msg string) bool {
 	if e != nil {
@@ -79,18 +78,6 @@ func ConnectPlayer(req *PlayerRequest, stream PlayerService_PlayerHandlerServer,
 			Jugada: 0,
 			error:  make(chan error),
 		}
-
-		round1 := &Round{}
-		round2 := &Round{}
-		round3 := &Round{}
-
-		player := &Player{
-			Round1: round1,
-			Round2: round2,
-			Round3: round3,
-		}
-
-		s.Players_data[player_id-1] = player
 
 		resp := PlayerResponse{Type: 0, Player: int32(player_id)}
 		if err := stream.Send(&resp); err != nil {
@@ -186,9 +173,44 @@ func comparar(valor_jugador int, valor_lider int) bool {
 
 }
 
+func depositar(player int32, ronda int32) {
+	ip := "172.17.0.5"
+	conn, err := amqp.Dial("amqp://client:1234@"+ip+":5672/")
+	failOnError(err, "Failed to connect to RabbitMQ")
+	defer conn.Close()
+
+	ch, err := conn.Channel()
+	failOnError(err, "Failed to open a channel")
+	defer ch.Close()
+
+	q, err := ch.QueueDeclare(
+	"hello", // name
+	false,   // durable
+	false,   // delete when unused
+	false,   // exclusive
+	false,   // no-wait
+	nil,     // arguments
+	)
+	failOnError(err, "Failed to declare a queue")
+
+	body := fmt.Sprintf("%d %d", player, ronda)
+	err = ch.Publish(
+	"",     // exchange
+	q.Name, // routing key
+	false,  // mandatory
+	false,  // immediate
+	amqp.Publishing {
+		ContentType: "text/plain",
+		Body:        []byte(body),
+	})
+	failOnError(err, "Failed to publish a message")
+
+}
+
+
 func (s *Server) Fase1P1(stream PlayerService_Fase1P1Server) error {
+
 	log.Printf("Fase 1 Iniciada")
-	log.Printf("Ronda Server: %d. Change Round: %d", s.Round, s.Change_round)
 
 	//receive player request
 	req, err := stream.Recv()
@@ -232,18 +254,17 @@ func (s *Server) Fase1P1(stream PlayerService_Fase1P1Server) error {
 	player_id := req.Player
 	log.Printf("Mi valor %d es %d", round+1, valor_lider)
 
-	s.Players_data[player_id-1].Round1.Plays = append(s.Players_data[player_id-1].Round1.Plays, int(req.Play))
 	check_error(err, "Error al recibir jugada")
 	log.Printf("Jugador %d. Resp: %d", player_id, req.Play)
 
 	s.Connection[req.Player-1].Jugada = int(req.Play)
-
 	if s.Connection[req.Player-1].Active == true {
 
 		var movimiento bool = comparar(int(req.Play), valor_lider)
 		if movimiento {
 			s.Connection[req.Player-1].Jugada += int(req.Play) 
-
+			
+			//save play in player data
 			// notificar al player que sobrevivio
 			resp := PlayerResponse{Type: 1, Response: 1}
 			err := stream.Send(&resp)
@@ -255,6 +276,7 @@ func (s *Server) Fase1P1(stream PlayerService_Fase1P1Server) error {
 			resp := PlayerResponse{Type: 1, Response: 0}
 			err := stream.Send(&resp)
 			check_error(err, "Error al notificar al player que murio en la ronda")
+			depositar(player_id, round+1)
 		}
 		s.Contestados += 1
 	}
@@ -269,6 +291,98 @@ func (s *Server) Fase1P1(stream PlayerService_Fase1P1Server) error {
 		s.R4 += 1
 	}
 
+	return nil
+}
+
+// func save_round_results(s *Server, round int) {
+// 	log.Printf("Guardando resultados de la ronda")
+// 	ip := "172.17.0.6"
+// 	conn_name, err := grpc.Dial(ip+":9003", grpc.WithInsecure())
+// 	check_error(err, "Error al conectar con el servidor")
+// 	defer conn_name.Close()
+
+// 	c_name := name.NewNameServiceClient(conn_name)
+// 	stream_name, err := c_name.Registrar(context.Background())
+// 	check_error(err, "Error al crear el stream de nombres")
+
+
+// 	//iterate players
+// 	//var jugadas []int32
+// 	for i := 0; i < len(s.Players_data); i++ {
+// 		jugadas := s.Players_data[i]
+// 		// if round == 1 {
+// 		// 	log.Printf("i2: %d", i)
+// 		// 	jugadas = &s.Players_data[i].Round1.Plays
+// 		// } else if round == 2 {
+// 		// 	jugadas = s.Players_data[i].Round2.Plays
+// 		// } else if round == 3 {
+// 		// 	jugadas = s.Players_data[i].Round3.Plays
+// 		// }
+
+// 		//print jugadas
+// 		for j := 0; j < len(jugadas); j++ {
+// 			log.Printf("Jugada: %d", jugadas[j])
+// 		}
+
+// 		log.Printf("1")
+// 		// send req to name server
+// 		req := &name.NameRequest{
+// 			Player: int32(i+1),
+// 			Ronda: int32(round),
+// 			Jugadas: jugadas,
+// 		}
+		
+// 		log.Printf("2")
+
+// 		// send req to name server
+// 		err = stream_name.Send(req)
+// 		check_error(err, "Error al enviar el request")
+		
+// 		log.Printf("3")
+
+// 		resp, err := stream_name.Recv()
+// 		if check_error(err, "Error al recibir respuesta del servidor"){
+// 			return
+// 		}
+// 		log.Printf("Recibido: %d", resp.Response)
+// 		log.Printf("Termino iteracion")
+// 	}
+// 	log.Printf("Resultados guardados")
+// }
+
+func (s *Server) SaveJugadasRonda1(stream PlayerService_SaveJugadasRonda1Server) error {
+	log.Printf("Guardando jugadas")
+	//receive player request
+	req, err := stream.Recv()
+
+	ip := "172.17.0.6"
+	conn_name, err := grpc.Dial(ip+":9003", grpc.WithInsecure())
+	check_error(err, "Error al conectar con el servidor")
+	defer conn_name.Close()
+
+	c_name := name.NewNameServiceClient(conn_name)
+	stream_name, err := c_name.Registrar(context.Background())
+	check_error(err, "Error al crear el stream de nombres")
+
+	req_name := &name.NameRequest{
+		Player: int32(req.Player),
+		Ronda: 1,
+		Jugadas: req.Jugadas,
+	}
+	
+	// send req to name server
+	err = stream_name.Send(req_name)
+	check_error(err, "Error al enviar el request")
+
+	resp, err := stream_name.Recv()
+	if check_error(err, "Error al recibir respuesta del servidor"){
+		return nil
+	}
+	log.Printf("Recibido: %d", resp.Response)
+
+	//send response to stream
+	err = stream.Send(&PlayerResponse{Type: 1, Response: 1})
+	check_error(err, "Error al enviar respuesta al player")
 	return nil
 }
 
@@ -294,7 +408,6 @@ func (s *Server) Fase1P2(stream PlayerService_Fase1P2Server) error {
 			check_error(err, "Error al notificar al player que sobrevivio al juego")
 		}
 	}
-
 	return nil
 }
 func (s *Server) Fase2(stream PlayerService_Fase2Server) error {

@@ -22,7 +22,7 @@ pozo: proto_pozo
 name: proto_name
 	@go run name_server.go
 
-data:
+data: proto_name proto_data
 	@go run data_server.go
 
 test_pozo: proto_pozo

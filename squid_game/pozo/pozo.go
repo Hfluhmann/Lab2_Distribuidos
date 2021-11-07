@@ -20,17 +20,16 @@ func read_pozo() (player int, ronda int, monto int) {
 	var r int
 	var m int
 
-	_, err = fmt.Fscanf(file, "%d %d %d\n", &p, &r, &m)
+	_, err = fmt.Fscanf(file, "Jugador_%d Ronda_%d %d\n", &p, &r, &m)
 	for {
 		player = p
 		ronda = r
 		monto = m
-		_, err := fmt.Fscanf(file, "%d %d %d\n", &p, &r, &m)
+		_, err := fmt.Fscanf(file, "Jugador_%d Ronda_%d %d\n", &p, &r, &m)
 		if err == io.EOF || err != nil {
 			break
 		}
 	}
-
 	return player, ronda, monto
 }
 

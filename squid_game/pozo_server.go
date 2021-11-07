@@ -39,12 +39,12 @@ func read_pozo() (player int, ronda int, monto int) {
 	var r int
 	var m int
 
-	_, err = fmt.Fscanf(file, "%d %d %d\n", &p, &r, &m)
+	_, err = fmt.Fscanf(file, "Jugador_%d Ronda_%d %d\n", &p, &r, &m)
 	for {
 		player = p
 		ronda = r
 		monto = m
-		_, err := fmt.Fscanf(file, "%d %d %d\n", &p, &r, &m)
+		_, err := fmt.Fscanf(file, "Jugador_%d Ronda_%d %d\n", &p, &r, &m)
 		if err == io.EOF || err != nil {
 			break
 		}
@@ -109,15 +109,16 @@ func main() {
 		for d := range msgs {
 			// read player and round from string
 			_, _, monto := read_pozo()
+			log.Printf("monto: %d", monto)
 			var player, round int
 			fmt.Sscanf(string(d.Body), "%d %d", &player, &round)
 			log.Printf("Player: %d Ronda: %d monto: %d", player, round, monto)
-			line := fmt.Sprintf("%d %d %d", player, round, monto+100000000)
+			line := fmt.Sprintf("\nJugador_%d Ronda_%d %d", player, round, monto+100000000)
 			// append line file pozo/pozo.txt
 			file, err := os.OpenFile("pozo/pozo.txt", os.O_APPEND|os.O_WRONLY, 0600)
 			check_error(err, "Error al abrir el archivo")
 			defer file.Close()
-			_, err = file.WriteString(line + "\n")
+			_, err = file.WriteString(line)
 			check_error(err, "Error al escribir en el archivo")
 		
 		}

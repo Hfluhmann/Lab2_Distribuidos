@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"Lab2_Distribuidos/squid_game/lider"
+	"Lab2_Distribuidos/squid_game/name"
+	"golang.org/x/net/context"
 
 	"google.golang.org/grpc"
 )
@@ -37,8 +39,10 @@ func main() {
 		log.Fatalf("Error: %v", err)
 	}
 
+	// ip del name node
+	var ip_name string = "172.17.0.5"
+
 	var connections []*lider.Connection
-	var playersData [16]*lider.Player
 	var randoms []int
 	s1 := rand.NewSource(time.Now().UnixNano() * 100)
 	r1 := rand.New(s1)
@@ -70,7 +74,6 @@ func main() {
 		Max_players:       2,
 		Connected_players: 0,
 		Change_fase:       false,
-		Players_data:      playersData,
 		Team1:             0,
 		Team2:             0,
 		Jugadores2:        0,
@@ -86,6 +89,7 @@ func main() {
 		R2:				   0,
 		R3:				   0,
 		R4:				   0,
+		Writed:			   false,
 	}
 
 	go func() {
@@ -114,87 +118,29 @@ func main() {
 				server.Change_fase = true
 				log.Printf("Comenzando Fase %d", server.Fase)
 
-				if server.Fase == 1 {
-					for i := 0; i < 4; i++ {
-						log.Printf("estoy imprimiendo la rinda %d", i)
-						if server.Connected_players == 0 {
-							log.Printf("No quedan jugadores\nHa terminado esta version de Squid Game")
-							return
-						}
-						log.Printf("Ronda: %d", i)
-						log.Printf("1. Comenzar ronda")
-						fmt.Scanf("%d", &input)
-						if input == 1 {
-							server.Round = i
-							server.Change_round = true
-						}
-						// for server.Contestados < server.Connected_players {
-						// 	log.Printf("-------------- Esperando Jugadas")
-						// 	time.Sleep(2 * time.Second)
-						// }
-						// server.Change_round = false
-						// server.Contestados = 0
-					}
+			} else if input == 2 {
+				conn, err := grpc.Dial(ip_name+":9003", grpc.WithInsecure())
+				check_error(err, "Error al conectar con el servidor del pozo")
+				defer conn.Close()
 
-					// //POR TERMINAR si jugadores impares quitar uno con server.Randoms[6]
-					// for server.Connected_players%2 == 1 {
+				c := name.NewNameServiceClient(conn)
+				stream, err := c.ObtenerJugadas(context.Background())
 
-					// 	if server.Connection[server.Randoms[6]-1].Active == true {
-					// 		// matar jugador de la posicion
-					// 		server.Connection[server.Randoms[6]-1].Active = false
-					// 		server.Connected_players -= 1
+				req := &name.NameRequest{
+					Player: 3,
+					Ronda: 12,
+				}
+				err = stream.Send(req)
+				check_error(err, "Error al enviar el request")
 
-					// 	} else {
-					// 		if server.Randoms[6] == 16 {
-					// 			server.Randoms[6] = 1
-					// 		} else {
-					// 			server.Randoms[6] += 1
-					// 		}
-
-					// 	}
-
-					// }
-
-				} else if server.Fase == 2 {
-
-					server.Jugadores2 = server.Connected_players
-
-					for server.Connected_players%2 == 1 {
-
-						if server.Connection[server.Randoms[8]-1].Active == true {
-							// matar jugador de la posicion
-
-							server.Connection[server.Randoms[8]-1].Active = false
-							server.Connected_players -= 1
-
-						} else {
-							if server.Randoms[8] == 16 {
-								server.Randoms[8] = 1
-							} else {
-								server.Randoms[8] += 1
-							}
-
-						}
-
-					}
-
-					continue
-				} else if server.Fase == 3 {
-
-					//POR TERMINAR si jugadores impares quitar uno con server.Randoms[8]
-
-					server.Jugadores3 = server.Connected_players //POR HACER crear UN arreglo con tamaño server.Jugadores3 que
-					//POR HACER crear un arreglo con los jugadores que quedan
-
-					continue
-				} else {
-					log.Printf("Ha terminado esta version de Squid Game")
+				resp, err := stream.Recv()
+				if check_error(err, "Error al recibir respuesta del servidor"){
 					return
 				}
-
-			} else if input == 2 {
-				log.Println("\n---------------------------------------------")
-				log.Println("Las jugadas del jugador")
+				// print all the jugadas
+				for _, jugada := range resp.Jugadas {
+					log.Printf("Jugada: %d", jugada)
+				}
 			}
 		}
 	}

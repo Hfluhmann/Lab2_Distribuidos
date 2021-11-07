@@ -37,7 +37,7 @@ func append_jugada(ip string, player int32, ronda int32){
 	defer f.Close()
 
 	//write to file
-	_, err = f.WriteString(fmt.Sprintf("%d %d %s\n", int(player), ronda, ip))
+	_, err = f.WriteString(fmt.Sprintf("Jugador_%d Ronda_%d %s\n", int(player), ronda, ip))
 	if check_error(err, "Error writing to file") {
 		return
 	}
@@ -56,7 +56,7 @@ func find_ip(player int32, ronda int32) string {
 	var player_aux int32
 	var ronda_aux int32
 	for {
-		_, err = fmt.Fscanf(f, "%d %d %s\n", &player_aux, &ronda_aux, &ip)
+		_, err = fmt.Fscanf(f, "Jugador_%d Ronda_%d %s\n", &player_aux, &ronda_aux, &ip)
 		if err == io.EOF {
 			break
 		}
@@ -119,7 +119,7 @@ func (s *Server) Registrar(stream NameService_RegistrarServer) error {
 		Type: 0,
 		Response: 0,
 	})
-	if check_error(err, "Error sending response to stream") {
+	if check_error(err, "Error sending response to lider stream") {
 		return err
 	}
 

@@ -82,6 +82,10 @@ func main() {
 		JugadoresFase2:    jugadoresFase2,
 		JugadoresFase3:    jugadoresFase3,
 		RespuestasFase3:   respuestasFase3,
+		R1:				   0,
+		R2:				   0,
+		R3:				   0,
+		R4:				   0,
 	}
 
 	go func() {
@@ -124,32 +128,32 @@ func main() {
 							server.Round = i
 							server.Change_round = true
 						}
-						for server.Contestados < server.Connected_players {
-							log.Printf("-------------- Esperando Jugadas")
-							time.Sleep(2 * time.Second)
-						}
-						server.Change_round = false
-						server.Contestados = 0
+						// for server.Contestados < server.Connected_players {
+						// 	log.Printf("-------------- Esperando Jugadas")
+						// 	time.Sleep(2 * time.Second)
+						// }
+						// server.Change_round = false
+						// server.Contestados = 0
 					}
 
-					//POR TERMINAR si jugadores impares quitar uno con server.Randoms[6]
-					for server.Connected_players%2 == 1 {
+					// //POR TERMINAR si jugadores impares quitar uno con server.Randoms[6]
+					// for server.Connected_players%2 == 1 {
 
-						if server.Connection[server.Randoms[6]-1].Active == true {
-							// matar jugador de la posicion
-							server.Connection[server.Randoms[6]-1].Active = false
-							server.Connected_players -= 1
+					// 	if server.Connection[server.Randoms[6]-1].Active == true {
+					// 		// matar jugador de la posicion
+					// 		server.Connection[server.Randoms[6]-1].Active = false
+					// 		server.Connected_players -= 1
 
-						} else {
-							if server.Randoms[6] == 16 {
-								server.Randoms[6] = 1
-							} else {
-								server.Randoms[6] += 1
-							}
+					// 	} else {
+					// 		if server.Randoms[6] == 16 {
+					// 			server.Randoms[6] = 1
+					// 		} else {
+					// 			server.Randoms[6] += 1
+					// 		}
 
-						}
+					// 	}
 
-					}
+					// }
 
 				} else if server.Fase == 2 {
 

@@ -41,6 +41,10 @@ type Server struct {
 	Jugadores3        int
 	Change_fase       bool
 	Change_round      bool
+	R1				  int
+	R2				  int
+	R3				  int
+	R4				  int
 	Players_data      [16]*Player
 	Randoms           []int
 	JugadoresFase2    []int
@@ -186,25 +190,47 @@ func (s *Server) Fase1P1(stream PlayerService_Fase1P1Server) error {
 	log.Printf("Fase 1 Iniciada")
 	log.Printf("Ronda Server: %d. Change Round: %d", s.Round, s.Change_round)
 
-	for !s.Change_round {
-		//log.Printf("Esperando cambio de ronda")
-		time.Sleep(2 * time.Second)
-		resp := PlayerResponse{Type: 1, Response: 1, Round: int32(s.Round)}
-		err := stream.Send(&resp)
-		check_error(err, "")
+	//receive player request
+	req, err := stream.Recv()
+	round := req.Round
+	// print round
+	log.Printf("Round: %d R1: %d R2: %d R3: %d Connected %d", round, s.R1, s.R2, s.R3, s.Connected_players)
+	if round+1 == 2 {
+		for {
+			if s.R1 >= s.Connected_players {
+				break
+			}
+			// sleep 1 sec
+			time.Sleep(1 * time.Second)
+		}
+	} else if round+1 == 3 {
+		for {
+			if s.R2 >= s.Connected_players {
+				break
+			}
+			// sleep 1 sec
+			time.Sleep(1 * time.Second)
+		}
+	} else if round+1 == 4 {
+		for {
+			if s.R3 >= s.Connected_players {
+				break
+			}
+			// sleep 1 sec
+			time.Sleep(1 * time.Second)
+		}
 	}
-	// resp := PlayerResponse{Type: 1, Response: 1, Round: int32(s.Round)}
-	// err := stream.Send(&resp)
+
 
 	// El lider selecciona un valor entre 6 y 10
-	valor_lider := s.Randoms[s.Round]
+	valor_lider := s.Randoms[round]
 
-	req, err := stream.Recv()
+	req, err = stream.Recv()
 	if err == io.EOF {
 		return err
 	}
 	player_id := req.Player
-	log.Printf("Mi valor %d es %d", s.Round+1, valor_lider)
+	log.Printf("Mi valor %d es %d", round+1, valor_lider)
 
 	s.Players_data[player_id-1].Round1.Plays = append(s.Players_data[player_id-1].Round1.Plays, int(req.Play))
 	check_error(err, "Error al recibir jugada")
@@ -214,9 +240,9 @@ func (s *Server) Fase1P1(stream PlayerService_Fase1P1Server) error {
 
 	if s.Connection[req.Player-1].Active == true {
 
-		var movimiento bool = comparar(int(req.Play), valor_lider) //POR HACER se esta usando un valor generico 7 como valor del juagdor
+		var movimiento bool = comparar(int(req.Play), valor_lider)
 		if movimiento {
-			s.Connection[req.Player-1].Jugada += int(req.Play) //POR HACER se suma el puntaje que puso el jugador
+			s.Connection[req.Player-1].Jugada += int(req.Play) 
 
 			// notificar al player que sobrevivio
 			resp := PlayerResponse{Type: 1, Response: 1}
@@ -233,6 +259,16 @@ func (s *Server) Fase1P1(stream PlayerService_Fase1P1Server) error {
 		s.Contestados += 1
 	}
 
+	if round == 0 {
+		s.R1 += 1
+	} else if round == 1 {
+		s.R2 += 1
+	} else if round == 2 {
+		s.R3 += 1
+	} else if round == 3 {
+		s.R4 += 1
+	}
+
 	return nil
 }
 
@@ -241,10 +277,13 @@ func (s *Server) Fase1P2(stream PlayerService_Fase1P2Server) error {
 	req, err := stream.Recv()
 	player_id := req.Player
 	check_error(err, "No se pudo determinar el numero de jugador")
+	log.Printf("Jugador %d. Resp: %d. Active: %d", player_id, s.Connection[player_id-1].Jugada, s.Connection[player_id-1].Active)
 	if s.Connection[player_id-1].Active == true {
-		if s.Connection[player_id-1].Jugada < 21 {
-			s.Connection[player_id].Active = false
-
+		if req.Total < 21 {
+			//print player Jugada
+			log.Printf("Jugador %d. Resp: %d", player_id, s.Connection[player_id-1].Jugada)
+			s.Connection[player_id-1].Active = false
+			s.Connected_players -= 1
 			//notificar al player que murio
 			resp := PlayerResponse{Type: 1, Response: 0}
 			err := stream.Send(&resp)

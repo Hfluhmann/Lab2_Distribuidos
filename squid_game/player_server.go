@@ -100,7 +100,7 @@ func conexion(ip string) (fase int32, player_id int32) {
 	return fase, player_id
 }
 
-func fase1(fase int32, player_id int32, ip string) {
+func fase1(fase int32, player_id int32, ip string, human bool) bool {
 
 	log.Println("\n---------------------------------------------")
 	log.Printf("Bienvenido al primer juego, jugador %d\nEspera a que te demos la orden para comenzar...", player_id)
@@ -110,50 +110,58 @@ func fase1(fase int32, player_id int32, ip string) {
 	defer conn.Close()
 
 	c := lider.NewPlayerServiceClient(conn)
+	total := 0
 	for i := 0; i < 4; i++ {
 		stream, err := c.Fase1P1(context.Background())
 		if !check_error(err, "Error al crear el stream fase 1") {
-			res, err := stream.Recv()
+			// block until we get a response equal to 0
 
-			for int(res.Round) != i {
-				log.Printf("Jugadores. Esperando cambio de ronda")
-				time.Sleep(2 * time.Second)
-				res, err = stream.Recv()
-			}
+			// send req to server
+			req := &lider.PlayerRequest{Round: int32(i)}
+			err = stream.Send(req)
+			check_error(err, "Error al enviar la solicitud")
 
 			check_error(err, "Error al recibir inicio de ronda")
 			log.Println("\n---------------------------------------------")
 			log.Printf("Iniciando Ronda %d...", i+1)
 
-			s1 := rand.NewSource(time.Now().UnixNano() * int64(player_id))
-			r1 := rand.New(s1)
-			var value int = int(r1.Intn(10) + 1)
+			var value int
+			if !human {
+				s1 := rand.NewSource(time.Now().UnixNano() * int64(player_id))
+				r1 := rand.New(s1)
+				value = int(r1.Intn(10) + 1)
+			} else {
+				fmt.Printf("\nIngrese un valor (1-5): ")
+				fmt.Scanf("%d", &value)
+			}
+
+			total += value
 
 			log.Printf("Enviando valor: %d", value)
 			// send player request to stream
-			req := &lider.PlayerRequest{Type: 1, Player: player_id, Play: int32(value)}
+			req = &lider.PlayerRequest{Type: 1, Player: player_id, Play: int32(value)}
 			err = stream.Send(req)
 			check_error(err, "Error al enviar la jugada")
 
-			res, err = stream.Recv()
+			res, err := stream.Recv()
 			check_error(err, "Error al recibir la respuesta de la jugada en fase 1")
 			if res.Type == 1 {
 				if res.Response == 0 {
 					log.Printf("Has muerto R.I.P.")
-					return
+					return false
 				} else if res.Response == 1 {
 					log.Printf("Has sobrevivido a la ronda")
 				}
 			}
 		}
 	}
-
-	stream, err := c.Fase1P2(context.Background())
-	req := &lider.PlayerRequest{Type: 1, Player: player_id}
-	err = stream.Send(req)
+	log.Println("\n---------------------------------------------")
+	stream_f2, err := c.Fase1P2(context.Background())
+	req := &lider.PlayerRequest{Type: 1, Player: player_id, Total: int32(total)}
+	err = stream_f2.Send(req)
 	check_error(err, "Error al consultar resultado del juego")
 
-	res, err := stream.Recv()
+	res, err := stream_f2.Recv()
 	check_error(err, "Error al recibir el resultado del juego")
 	if res.Type == 1 {
 		if res.Response == 0 {
@@ -162,6 +170,7 @@ func fase1(fase int32, player_id int32, ip string) {
 			log.Printf("Has sobrevivido al juego")
 		}
 	}
+	return true
 }
 
 func fase2(fase int32, player_id int32, ip string) {
@@ -267,9 +276,29 @@ func fase3(fase int32, player_id int32, ip string) {
 }
 
 func main() {
-	ip := "172.17.0.2"
+	ip := "172.17.0.4"
 
 	fase, player_id := conexion(ip)
-	fase1(fase, player_id, ip)
+	
+	
+	// read in from stdin
+	var option int
+	fmt.Println("\n1. Jugador Bot\n2. Jugador Humano")
+	fmt.Scanf("%d", &option)
+
+	if option == 1 {
+		flag := fase1(fase, player_id, ip, false)
+		if flag {
+			fase2(fase, player_id, ip)
+		}
+		// fase3(fase, player_id, ip)
+
+	} else if option == 2 {
+		flag := fase1(fase, player_id, ip, true)
+		if flag {
+			fase2(fase, player_id, ip)
+		}
+		// fase3(fase, player_id, ip)
+	}
 
 }

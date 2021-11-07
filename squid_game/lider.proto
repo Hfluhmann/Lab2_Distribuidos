@@ -13,6 +13,8 @@ message PlayerRequest{
     int32 type = 1; // type of request. 0: connection, 1: send move
     int32 player = 2; // player id
     int32 play = 3; // content of the play
+    int32 round = 4; // round number
+    int32 total = 5; 
 }
 
 message PlayerResponse{

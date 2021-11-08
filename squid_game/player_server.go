@@ -168,7 +168,7 @@ func fase1(fase int32, player_id int32, ip string, human bool) bool {
 				fmt.Printf("\nIngrese un valor (1-10): ")
 				fmt.Scanf("%d", &value)
 			}
-			value  = 6
+
 			total += value
 			jugadas = append(jugadas, int32(value))
 

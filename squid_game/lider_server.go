@@ -63,7 +63,7 @@ func main() {
 	for i := 0; i < 9; i++ {
 
 		if i < 4 { //numeros primer juego
-			randoms = append(randoms, r1.Intn(5)+11)
+			randoms = append(randoms, r1.Intn(5)+6)
 		} else if i == 4 { //numero segunda ronda
 			randoms = append(randoms, r1.Intn(4)+1)
 		} else if i == 5 { //numero 3ra ronda

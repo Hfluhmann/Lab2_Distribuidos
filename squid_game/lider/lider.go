@@ -187,7 +187,7 @@ func comparar(valor_jugador int, valor_lider int) bool {
 }
 func depositar(player int32, ronda int32) {
 	ip := get_env_var("IP_POZO")
-	conn, err := amqp.Dial("amqp://client:1234@"+ip+":5672/")
+	conn, err := amqp.Dial("amqp://"+get_env_var("RM_USER")+":"+get_env_var("RM_PASS")+"@"+ip+":5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 

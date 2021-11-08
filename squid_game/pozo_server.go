@@ -12,7 +12,20 @@ import (
 	"google.golang.org/grpc"
 	"Lab2_Distribuidos/squid_game/pozo"
 	"github.com/streadway/amqp" //rabbitmq
+	"github.com/joho/godotenv"
 )
+
+func get_env_var(key string) string {
+
+	// load .env file
+	err := godotenv.Load(".env")
+  
+	if err != nil {
+	  log.Fatalf("Error loading .env file")
+	}
+  
+	return os.Getenv(key)
+  }
 
 func check_error(e error, msg string) bool {
 	if e != nil {
@@ -74,7 +87,7 @@ func main() {
 
 	//------------------------------------------------------
 	//----------------- RabbitMQ ---------------------------
-	conn, err := amqp.Dial("amqp://client:1234@172.17.0.5:5672/")
+	conn, err := amqp.Dial("amqp://client:1234@"+get_env_var("IP_POZO")+":5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 

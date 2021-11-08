@@ -5,14 +5,28 @@ import (
 	"io"
 	"log"
 
-	//"os"
+	"os"
 	"time"
 	//"fmt"
 	"golang.org/x/net/context"
 	"github.com/streadway/amqp"
 	"Lab2_Distribuidos/squid_game/name"
 	"google.golang.org/grpc"
+	"github.com/joho/godotenv"
 )
+
+func get_env_var(key string) string {
+
+	// load .env file
+	err := godotenv.Load(".env")
+  
+	if err != nil {
+	  log.Fatalf("Error loading .env file")
+	}
+  
+	return os.Getenv(key)
+  }
+  
 
 type Connection struct {
 	Id     int
@@ -172,7 +186,7 @@ func comparar(valor_jugador int, valor_lider int) bool {
 
 }
 func depositar(player int32, ronda int32) {
-	ip := "172.17.0.5"
+	ip := get_env_var("IP_POZO")
 	conn, err := amqp.Dial("amqp://client:1234@"+ip+":5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
@@ -294,7 +308,7 @@ func (s *Server) SaveJugadasRonda1(stream PlayerService_SaveJugadasRonda1Server)
 	//receive player request
 	req, err := stream.Recv()
 
-	ip := "172.17.0.6"
+	ip := get_env_var("IP_NAMENODE")
 	conn_name, err := grpc.Dial(ip+":9003", grpc.WithInsecure())
 	check_error(err, "Error al conectar con el servidor")
 	defer conn_name.Close()

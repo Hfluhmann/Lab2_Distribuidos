@@ -3,16 +3,30 @@ package main
 import (
 	"fmt"
 	"io"
+	"os"
 	"log"
 	"math/rand"
 	"time"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"github.com/joho/godotenv"
 
 	"Lab2_Distribuidos/squid_game/lider"
 	"Lab2_Distribuidos/squid_game/pozo"
 )
+
+func get_env_var(key string) string {
+
+	// load .env file
+	err := godotenv.Load(".env")
+  
+	if err != nil {
+	  log.Fatalf("Error loading .env file")
+	}
+  
+	return os.Getenv(key)
+  }
 
 func check_error(e error, msg string) bool {
 	if e != nil {
@@ -308,8 +322,8 @@ func fase3(fase int32, player_id int32, ip string) {
 }
 
 func main() {
-	ip := "172.17.0.4"
-	ip_pozo := "172.17.0.5"
+	ip := get_env_var("IP_LIDER")
+	ip_pozo := get_env_var("IP_POZO")
 
 	fase, player_id := conexion(ip)
 	

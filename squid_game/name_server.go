@@ -6,9 +6,10 @@ import (
 	// "math/rand"
 	// "time"
 	"net"
+	"os"
 
 	"Lab2_Distribuidos/squid_game/name"
-
+	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 )
 
@@ -21,6 +22,18 @@ func check_error(e error, msg string) bool {
 	return false
 }
 
+func get_env_var(key string) string {
+
+	// load .env file
+	err := godotenv.Load(".env")
+  
+	if err != nil {
+	  log.Fatalf("Error loading .env file")
+	}
+  
+	return os.Getenv(key)
+  }
+
 func main() {
 	fmt.Println("-------------------------------------------------")
 	fmt.Println("------------- Iniciando Name Node ---------------")
@@ -28,7 +41,7 @@ func main() {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 9003))
 	check_error(err, "Error al escuchar en el puerto 9003")
 
-	ips := [3]string{"172.17.0.3", "172.17.0.4", "172.17.0.5"}
+	ips := [3]string{get_env_var("IP_JUGADORES"), get_env_var("IP_POZO"), get_env_var("IP_POZO")}
 	server := &name.Server{Ips: ips}
 
 	grpcServer := grpc.NewServer()

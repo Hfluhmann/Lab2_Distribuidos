@@ -6,13 +6,26 @@ import (
 	"math/rand"
 	"net"
 	"time"
+	"os"
 
 	"Lab2_Distribuidos/squid_game/lider"
 	"Lab2_Distribuidos/squid_game/name"
 	"golang.org/x/net/context"
-
+	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 )
+
+func get_env_var(key string) string {
+
+	// load .env file
+	err := godotenv.Load(".env")
+  
+	if err != nil {
+	  log.Fatalf("Error loading .env file")
+	}
+  
+	return os.Getenv(key)
+  }
 
 func check_error(e error, msg string) bool {
 	if e != nil {
@@ -40,7 +53,7 @@ func main() {
 	}
 
 	// ip del name node
-	var ip_name string = "172.17.0.5"
+	var ip_name string = get_env_var("IP_POZO")
 	max := 3
 	var connections []*lider.Connection
 	var randoms []int

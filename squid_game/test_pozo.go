@@ -30,7 +30,7 @@ func failOnError(err error, msg string) {
   }
 
 func depositar(player int, ronda int) {
-	conn, err := amqp.Dial("amqp://client:1234@172.17.0.5:5672/")
+	conn, err := amqp.Dial("amqp://client:1234@"+get_env_var("IP_POZO")+":5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 
@@ -63,7 +63,7 @@ func depositar(player int, ronda int) {
 }
 
 func main() {
-	ip := "172.17.0.4"
+	ip := get_env_var("IP_LIDER")
 
 	//read a number from stdin
 	var num int

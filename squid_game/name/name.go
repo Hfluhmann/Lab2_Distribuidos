@@ -5,8 +5,8 @@ import (
 	"io"
 	"log"
 	"os"
-	// "math/rand"
-	// "time"
+	"math/rand"
+	"time"
 	"fmt"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -72,9 +72,9 @@ func find_ip(player int32, ronda int32) string {
 
 func (s *Server) Registrar(stream NameService_RegistrarServer) error {
 	// get a random number between 0 and 2
-	// s1 := rand.NewSource(time.Now().UnixNano() * 100)
-	// r1 := rand.New(s1)
-	i := 2//r1.Intn(3)
+	s1 := rand.NewSource(time.Now().UnixNano() * 100)
+	r1 := rand.New(s1)
+	i := r1.Intn(3)
 	
 	
 	//receive the request

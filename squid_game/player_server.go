@@ -337,19 +337,19 @@ func main() {
 		fmt.Scanf("%d", &opcion)
 
 		if opcion == 1 {
-			// fase1(fase, player_id, ip, false)
-			flag := fase1(fase, player_id, ip, false)
-			if flag {
-				fase2(fase, player_id, ip)
-			}
+			fase1(fase, player_id, ip, false)
+			// flag := fase1(fase, player_id, ip, false)
+			// if flag {
+			// 	fase2(fase, player_id, ip)
+			// }
 			// fase3(fase, player_id, ip)
 
 		} else if opcion == 2 {
-			// fase1(fase, player_id, ip, true)
-			flag := fase1(fase, player_id, ip, true)
-			if flag {
-				fase2(fase, player_id, ip)
-			}
+			fase1(fase, player_id, ip, true)
+			// flag := fase1(fase, player_id, ip, true)
+			// if flag {
+			// 	fase2(fase, player_id, ip)
+			// }
 			// fase3(fase, player_id, ip)
 		}
 	} else if opcion == 2 {

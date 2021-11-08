@@ -74,7 +74,7 @@ func main() {
 	fmt.Println("---------------------------------------------\n")
 	
 	go func() {
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 9001))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", 9002))
 	if check_error(err, "Error al iniciar el servidor") {
 		return
 	}

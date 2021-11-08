@@ -1,13 +1,17 @@
 proto:
+	@export PATH="$PATH:$(go env GOPATH)/bin"
 	@protoc --go_out=plugins=grpc:lider --go_opt=paths=source_relative lider.proto
 
 proto_pozo:
+	@export PATH="$PATH:$(go env GOPATH)/bin"
 	@protoc --go_out=plugins=grpc:pozo --go_opt=paths=source_relative pozo.proto
 
 proto_name:
+	@export PATH="$PATH:$(go env GOPATH)/bin"
 	@protoc --go_out=plugins=grpc:name --go_opt=paths=source_relative name.proto
 
 proto_data:
+	@export PATH="$PATH:$(go env GOPATH)/bin"
 	@protoc --go_out=plugins=grpc:data --go_opt=paths=source_relative data.proto
 
 lider: proto

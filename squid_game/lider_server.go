@@ -54,7 +54,8 @@ func main() {
 
 	// ip del name node
 	var ip_name string = get_env_var("IP_POZO")
-	max := 3
+
+	max := 16
 	var connections []*lider.Connection
 	var randoms []int
 	s1 := rand.NewSource(time.Now().UnixNano() * 100)

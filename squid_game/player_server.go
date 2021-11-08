@@ -353,7 +353,7 @@ func main() {
 			// fase3(fase, player_id, ip)
 		}
 	} else if opcion == 2 {
-		conn, err := grpc.Dial(ip_pozo+":9001", grpc.WithInsecure())
+		conn, err := grpc.Dial(ip_pozo+":9002", grpc.WithInsecure())
 		check_error(err, "Error al conectar con el servidor del pozo")
 		defer conn.Close()
 	

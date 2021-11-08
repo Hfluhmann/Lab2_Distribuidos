@@ -109,7 +109,7 @@ func (s *Server) PlayerHandler(stream PlayerService_PlayerHandlerServer) error {
 	default:
 	}
 
-	max_players := 2
+	max_players := s.Max_players
 	if len(s.Connection) < max_players {
 		log.Println("Esperando a los jugadores")
 		req, err := stream.Recv()
@@ -157,7 +157,6 @@ func (s *Server) WaitingRoom(stream PlayerService_WaitingRoomServer) error {
 	}
 	return nil
 }
-
 //Compara los puntajes seleccionados de un participante con el lider en el primer juego, y decide si eliminarlo
 func comparar(valor_jugador int, valor_lider int) bool {
 	if valor_jugador < valor_lider {
@@ -172,7 +171,6 @@ func comparar(valor_jugador int, valor_lider int) bool {
 	}
 
 }
-
 func depositar(player int32, ronda int32) {
 	ip := "172.17.0.5"
 	conn, err := amqp.Dial("amqp://client:1234@"+ip+":5672/")
@@ -206,8 +204,6 @@ func depositar(player int32, ronda int32) {
 	failOnError(err, "Failed to publish a message")
 
 }
-
-
 func (s *Server) Fase1P1(stream PlayerService_Fase1P1Server) error {
 
 	log.Printf("Fase 1 Iniciada")
@@ -293,63 +289,6 @@ func (s *Server) Fase1P1(stream PlayerService_Fase1P1Server) error {
 
 	return nil
 }
-
-// func save_round_results(s *Server, round int) {
-// 	log.Printf("Guardando resultados de la ronda")
-// 	ip := "172.17.0.6"
-// 	conn_name, err := grpc.Dial(ip+":9003", grpc.WithInsecure())
-// 	check_error(err, "Error al conectar con el servidor")
-// 	defer conn_name.Close()
-
-// 	c_name := name.NewNameServiceClient(conn_name)
-// 	stream_name, err := c_name.Registrar(context.Background())
-// 	check_error(err, "Error al crear el stream de nombres")
-
-
-// 	//iterate players
-// 	//var jugadas []int32
-// 	for i := 0; i < len(s.Players_data); i++ {
-// 		jugadas := s.Players_data[i]
-// 		// if round == 1 {
-// 		// 	log.Printf("i2: %d", i)
-// 		// 	jugadas = &s.Players_data[i].Round1.Plays
-// 		// } else if round == 2 {
-// 		// 	jugadas = s.Players_data[i].Round2.Plays
-// 		// } else if round == 3 {
-// 		// 	jugadas = s.Players_data[i].Round3.Plays
-// 		// }
-
-// 		//print jugadas
-// 		for j := 0; j < len(jugadas); j++ {
-// 			log.Printf("Jugada: %d", jugadas[j])
-// 		}
-
-// 		log.Printf("1")
-// 		// send req to name server
-// 		req := &name.NameRequest{
-// 			Player: int32(i+1),
-// 			Ronda: int32(round),
-// 			Jugadas: jugadas,
-// 		}
-		
-// 		log.Printf("2")
-
-// 		// send req to name server
-// 		err = stream_name.Send(req)
-// 		check_error(err, "Error al enviar el request")
-		
-// 		log.Printf("3")
-
-// 		resp, err := stream_name.Recv()
-// 		if check_error(err, "Error al recibir respuesta del servidor"){
-// 			return
-// 		}
-// 		log.Printf("Recibido: %d", resp.Response)
-// 		log.Printf("Termino iteracion")
-// 	}
-// 	log.Printf("Resultados guardados")
-// }
-
 func (s *Server) SaveJugadasRonda1(stream PlayerService_SaveJugadasRonda1Server) error {
 	log.Printf("Guardando jugadas")
 	//receive player request
@@ -385,7 +324,6 @@ func (s *Server) SaveJugadasRonda1(stream PlayerService_SaveJugadasRonda1Server)
 	check_error(err, "Error al enviar respuesta al player")
 	return nil
 }
-
 func (s *Server) Fase1P2(stream PlayerService_Fase1P2Server) error {
 	//Eliminar jugadores que no lograron el puntaje
 	req, err := stream.Recv()
@@ -408,26 +346,55 @@ func (s *Server) Fase1P2(stream PlayerService_Fase1P2Server) error {
 			check_error(err, "Error al notificar al player que sobrevivio al juego")
 		}
 	}
+
+	if s.Change_fase == true {
+		s.Change_fase = false
+	}
+
 	return nil
 }
 func (s *Server) Fase2(stream PlayerService_Fase2Server) error {
 
+	//wait until change fase is true
+	for {
+		if s.Change_fase == true {
+			break
+		}
+		time.Sleep(1 * time.Second)
+	}
+	log.Printf("VOY A RECIBIR 111")
 	Check, err := stream.Recv()
+	log.Printf("YA RECIBI")
 	if s.Connection[Check.Player].Active {
 		che := PlayerResponse{Type: 2, Response: int32(1)}
 		err = stream.Send(&che)
+		check_error(err, "Error al notificar al player que puede empezar el juego")
 	} else {
 		che := PlayerResponse{Type: 2, Response: int32(0)}
 		err = stream.Send(&che)
+		check_error(err, "Error al notificar al player que murio antes de iniciar el juego")
 	}
-
+	log.Printf("AUXILIO")
 	valor_lider := s.Randoms[4]
 
 	//ver que onda con los equipos y con conseguir los valores
 
+	log.Printf("111")
 	req, err := stream.Recv()
-	s.JugadoresFase2 = append(s.JugadoresFase2, int(req.Player))
+	log.Printf("222")
+	player_id := req.Player
+	s.JugadoresFase2 = append(s.JugadoresFase2, int(player_id))
 	check_error(err, "aaaa")
+	log.Printf("333")
+
+	// wait until jugadoresfase2 have Connected_players
+	for {
+		if len(s.JugadoresFase2) == s.Connected_players {
+			break
+		}
+		time.Sleep(1 * time.Second)
+	}
+
 
 	//sacar suma de resultados de cada team
 	for i := 0; i < s.Jugadores2; i++ {
@@ -438,6 +405,7 @@ func (s *Server) Fase2(stream PlayerService_Fase2Server) error {
 		}
 	}
 
+	log.Printf("000")
 	if valor_lider%2 != s.Team1%2 && valor_lider%2 != s.Team2%2 {
 		//Matar equipo random
 
@@ -461,6 +429,7 @@ func (s *Server) Fase2(stream PlayerService_Fase2Server) error {
 				}
 
 			}
+			log.Printf("444")
 
 		} else {
 
@@ -480,9 +449,9 @@ func (s *Server) Fase2(stream PlayerService_Fase2Server) error {
 				}
 
 			}
-
 		}
-
+		
+		log.Printf("555")
 	} else if valor_lider%2 != s.Team1%2 && valor_lider%2 == s.Team2%2 {
 		//Matar equipo 1
 		log.Printf("MATADO EL EQUIPO 1")
@@ -501,7 +470,7 @@ func (s *Server) Fase2(stream PlayerService_Fase2Server) error {
 			}
 
 		}
-
+		log.Printf("666")
 	} else if valor_lider%2 == s.Team1%2 && valor_lider%2 != s.Team2%2 {
 		//Matar equipo 2
 		log.Printf("MATADO EL EQUIPO 2")
@@ -520,13 +489,13 @@ func (s *Server) Fase2(stream PlayerService_Fase2Server) error {
 			}
 
 		}
-
+		log.Printf("777")
 	}
 
 	resp := PlayerResponse{Type: 1, Response: 1}
 	err = stream.Send(&resp)
 	check_error(err, "Error al notificar al player que sobrevivio la ronda")
-
+	log.Printf("888")
 	return nil
 }
 func (s *Server) Fase3(stream PlayerService_Fase3Server) error {

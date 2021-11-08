@@ -41,7 +41,7 @@ func main() {
 
 	// ip del name node
 	var ip_name string = "172.17.0.5"
-
+	max := 3
 	var connections []*lider.Connection
 	var randoms []int
 	s1 := rand.NewSource(time.Now().UnixNano() * 100)
@@ -49,17 +49,17 @@ func main() {
 	for i := 0; i < 9; i++ {
 
 		if i < 4 { //numeros primer juego
-			randoms = append(randoms, r1.Intn(5)+6)
+			randoms = append(randoms, r1.Intn(5)+11)
 		} else if i == 4 { //numero segunda ronda
 			randoms = append(randoms, r1.Intn(4)+1)
 		} else if i == 5 { //numero 3ra ronda
 			randoms = append(randoms, r1.Intn(10)+1)
 		} else if i == 6 { //si sobra un jugador para el segundo juego
-			randoms = append(randoms, r1.Intn(16)+1)
+			randoms = append(randoms, r1.Intn(max)+1)
 		} else if i == 7 { //si hay que matar un equipo aleatorio en el 2do juego
 			randoms = append(randoms, r1.Intn(2))
 		} else if i == 8 { //si sobra un jugador para el tercer juego
-			randoms = append(randoms, r1.Intn(16)+1)
+			randoms = append(randoms, r1.Intn(max)+1)
 		}
 
 	}
@@ -71,7 +71,7 @@ func main() {
 	server := &lider.Server{
 		Connection:        connections,
 		Fase:              0,
-		Max_players:       2,
+		Max_players:       max,
 		Connected_players: 0,
 		Change_fase:       false,
 		Team1:             0,
@@ -115,6 +115,38 @@ func main() {
 			fmt.Scanf("%d", &input)
 			if input == 1 {
 				server.Fase++
+
+				if server.Fase == 2 {
+					log.Printf("-------------------------------  %d %d", server.Randoms[6], len(server.Connection))
+					for server.Connected_players%2 != 0 {
+						if server.Connection[server.Randoms[6]-1].Active == true {
+							// matar jugador de la posicion
+							server.Connection[server.Randoms[6]-1].Active = false
+							server.Connected_players -= 1
+						} else {
+							if server.Randoms[6] == max {
+								server.Randoms[6] = 1
+							} else {
+								server.Randoms[6] += 1
+							}
+						}
+					}
+				}
+				if server.Fase == 3 {
+					
+					if server.Connection[server.Randoms[8]-1].Active == true {
+						// matar jugador de la posicion
+						server.Connection[server.Randoms[8]-1].Active = false
+						server.Connected_players -= 1
+					} else {
+						if server.Randoms[8] == 16 {
+							server.Randoms[8] = 1
+						} else {
+							server.Randoms[8] += 1
+						}
+					}
+				}
+
 				server.Change_fase = true
 				log.Printf("Comenzando Fase %d", server.Fase)
 

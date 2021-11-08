@@ -151,10 +151,10 @@ func fase1(fase int32, player_id int32, ip string, human bool) bool {
 				r1 := rand.New(s1)
 				value = int(r1.Intn(10) + 1)
 			} else {
-				fmt.Printf("\nIngrese un valor (1-5): ")
+				fmt.Printf("\nIngrese un valor (1-10): ")
 				fmt.Scanf("%d", &value)
 			}
-
+			value  = 6
 			total += value
 			jugadas = append(jugadas, int32(value))
 
@@ -215,32 +215,38 @@ func fase2(fase int32, player_id int32, ip string) {
 
 		check := &lider.PlayerRequest{Type: 2, Player: player_id}
 		err = stream.Send(check)
+		check_error(err, "Error al enviar los datos del jugador a fase 2")
 
 		res, err := stream.Recv()
-
-		check_error(err, "")
+		check_error(err, "Error al recibir la confirmacion de inicio de fase 2")
+		log.Printf("99999")
 
 		if res.Response == 0 {
+			log.Printf("He muerto porque sobraba un jugador para la segunda fase")
 			return
 		}
-
+		log.Printf("111")
 		s1 := rand.NewSource(time.Now().UnixNano() * int64(player_id))
 		r1 := rand.New(s1)
+		log.Printf("222")
 		var value int = int(r1.Intn(4) + 1)
-
+		log.Printf("333")
 		log.Printf("Enviando valor: %d", value)
 		// send player request to stream
 		req := &lider.PlayerRequest{Type: 1, Player: player_id, Play: int32(value)}
 		err = stream.Send(req)
-
+		log.Printf("444")
 		res, err = stream.Recv()
-
+		log.Printf("555")
 		check_error(err, "Error al recibir la respuesta de la jugada en fase 2")
 		if res.Type == 1 {
+			log.Printf("666")
 			if res.Response == 0 {
+				log.Printf("777")
 				log.Printf("Has muerto R.I.P.")
 				return
 			} else if res.Response == 1 {
+				log.Printf("888")
 				log.Printf("Has sobrevivido a la ronda")
 			}
 		}
@@ -317,19 +323,19 @@ func main() {
 		fmt.Scanf("%d", &opcion)
 
 		if opcion == 1 {
-			fase1(fase, player_id, ip, false)
-			// flag := fase1(fase, player_id, ip, false)
-			// if flag {
-			// 	fase2(fase, player_id, ip)
-			// }
+			// fase1(fase, player_id, ip, false)
+			flag := fase1(fase, player_id, ip, false)
+			if flag {
+				fase2(fase, player_id, ip)
+			}
 			// fase3(fase, player_id, ip)
 
 		} else if opcion == 2 {
-			fase1(fase, player_id, ip, true)
-			// flag := fase1(fase, player_id, ip, true)
-			// if flag {
-			// 	fase2(fase, player_id, ip)
-			// }
+			// fase1(fase, player_id, ip, true)
+			flag := fase1(fase, player_id, ip, true)
+			if flag {
+				fase2(fase, player_id, ip)
+			}
 			// fase3(fase, player_id, ip)
 		}
 	} else if opcion == 2 {

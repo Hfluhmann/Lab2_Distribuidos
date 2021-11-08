@@ -1,12 +1,1 @@
 Jugador_0 Ronda_0 0
-Jugador_2 Ronda_2 100000000
-Jugador_1 Ronda_3 200000000
-Jugador_1 Ronda_2 300000000
-Jugador_1 Ronda_1 400000000
-Jugador_1 Ronda_3 500000000
-Jugador_1 Ronda_1 600000000
-Jugador_2 Ronda_1 700000000
-Jugador_3 Ronda_1 800000000
-Jugador_2 Ronda_1 900000000
-Jugador_1 Ronda_3 1000000000
-Jugador_3 Ronda_4 1100000000
